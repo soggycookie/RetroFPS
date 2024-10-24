@@ -1,0 +1,7 @@
+- Stuck while trying to move with a direction toward wall while airing.
+- Can air move when jump near a wall (condition: have to press move)
+- Unexpected behavior when slamming while wall slide
+- Unexpected wall slide behavior (still keep velocity)
+- HUD update
+
+

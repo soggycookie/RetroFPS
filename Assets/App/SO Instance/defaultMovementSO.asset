@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52876cc8eea873940b1b8c74e2f0accf, type: 3}
+  m_Name: defaultMovementSO
+  m_EditorClassIdentifier: 
+  moveSpeed: 220
+  slopeDownwardForce: 1
+  groundDrag: 10
+  maxWalkingVelocity: 12
+  maxSlopeDegAngle: 46
+  ground:
+    serializedVersion: 2
+    m_Bits: 72
+  enemy:
+    serializedVersion: 2
+    m_Bits: 256
+  jumpForce: 20
+  wallJumpForce: 18
+  jumpCoolDown: 0.25
+  maxWallJumpTime: 3
+  maxAirMultiplier: 0.2
+  fallingAirMultiplier: 0.05
+  maxAirVelocity: 400
+  maxJumpVelocity: 15
+  airDragWhileDash: 30
+  dashForce: 60
+  dashDuration: 0.25
+  maxDashVelocity: 35
+  totalDashEnergy: 100
+  maxDashCharge: 4
+  rechargeEnergySpeed: 200
+  timeBeforeRecharge: 1
+  slideForce: 200
+  maxSlidingVelocity: 20
+  groundSlamForce: 700
+  frozenSlamTime: 0.2
