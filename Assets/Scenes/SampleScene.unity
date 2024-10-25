@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: d4e34faecb9b9564e941b0a4236003c7, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 94d852a7748a347489661febea5eafc6, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -34,11 +34,11 @@ RenderSettings:
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
-  m_ReflectionBounces: 1
+  m_ReflectionBounces: 2
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1297456566}
-  m_IndirectSpecularColor: {r: 0.079334185, g: 0.13543162, b: 0.16916148, a: 1}
+  m_IndirectSpecularColor: {r: 0.35775155, g: 0.73686606, b: 0.9810811, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -783,7 +783,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -1070,7 +1070,7 @@ GameObject:
   - component: {fileID: 359316474}
   - component: {fileID: 359316473}
   - component: {fileID: 359316472}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1335,7 +1335,7 @@ GameObject:
   - component: {fileID: 431109864}
   - component: {fileID: 431109863}
   - component: {fileID: 431109862}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1801,7 +1801,7 @@ GameObject:
   m_Layer: 10
   m_Name: Pistol
   m_TagString: Untagged
-  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2253,7 +2253,7 @@ GameObject:
   - component: {fileID: 818106938}
   - component: {fileID: 818106936}
   - component: {fileID: 818106937}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Charging Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4020,7 +4020,7 @@ GameObject:
   m_Layer: 10
   m_Name: Pistol Visual
   m_TagString: Untagged
-  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -4304,7 +4304,7 @@ GameObject:
   - component: {fileID: 1297456566}
   - component: {fileID: 1297456565}
   m_Layer: 0
-  m_Name: Directional Light
+  m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4344,13 +4344,13 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -4383,10 +4383,10 @@ Light:
     serializedVersion: 2
     m_Bits: 991
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 2
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -4402,13 +4402,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1297456564}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
   m_LocalPosition: {x: -17.2, y: 45.9, z: -11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
 --- !u!1 &1320390245
 GameObject:
   m_ObjectHideFlags: 0
@@ -4421,7 +4421,7 @@ GameObject:
   - component: {fileID: 1320390248}
   - component: {fileID: 1320390247}
   - component: {fileID: 1320390249}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Charging Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4639,7 +4639,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1350922963}
   - component: {fileID: 1350922964}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Special Charging UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4902,7 +4902,7 @@ GameObject:
   - component: {fileID: 1418212069}
   - component: {fileID: 1418212071}
   - component: {fileID: 1418212070}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5160,10 +5160,10 @@ LightingSettings:
   m_PVREnvironmentSampleCount: 256
   m_PVREnvironmentReferencePointCount: 2048
   m_LightProbeSampleCountMultiplier: 4
-  m_PVRBounces: 2
+  m_PVRBounces: 3
   m_PVRMinBounces: 2
   m_PVREnvironmentImportanceSampling: 1
-  m_PVRFilteringMode: 1
+  m_PVRFilteringMode: 2
   m_PVRDenoiserTypeDirect: 1
   m_PVRDenoiserTypeIndirect: 1
   m_PVRDenoiserTypeAO: 1
@@ -5624,7 +5624,7 @@ GameObject:
   - component: {fileID: 1615298779}
   - component: {fileID: 1615298781}
   - component: {fileID: 1615298780}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7113,7 +7113,7 @@ GameObject:
   - component: {fileID: 1929361425}
   - component: {fileID: 1929361424}
   - component: {fileID: 1929361423}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: 'Holding Charging Bar '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7594,7 +7594,7 @@ GameObject:
   - component: {fileID: 2018380177}
   - component: {fileID: 2018380176}
   - component: {fileID: 2018380175}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: 'Holding Charging Bar '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7994,7 +7994,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2097668008}
   - component: {fileID: 2097668009}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Special Charging UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8346,6 +8346,99 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5744849683255645866}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6519144522932081482
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2616979205612380155, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_timeToMaxExplosion
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: -0.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: -0.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: -0.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 19.906847
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.1580858
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.061466
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2743090024889825491, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690619963441787401, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+        type: 3}
+      propertyPath: m_Name
+      value: Explosion
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6f746e0827cb02342b5bc5afd1859ae1, type: 3}
 --- !u!1001 &7465158875399854759
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8494,3 +8587,4 @@ SceneRoots:
   - {fileID: 797079144}
   - {fileID: 1962632749}
   - {fileID: 1094919753}
+  - {fileID: 6519144522932081482}

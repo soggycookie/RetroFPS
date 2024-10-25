@@ -47,7 +47,7 @@ public class Health : MonoBehaviour, IDamagable
         OnDeath?.Invoke();
     }
 
-    public virtual void ApplyDamage(float healthLost, Vector3 forceDir, float force)
+    public void ApplyDamage(float healthLost)
     {
         LoseHealth(healthLost);
         OnBeingHit?.Invoke();

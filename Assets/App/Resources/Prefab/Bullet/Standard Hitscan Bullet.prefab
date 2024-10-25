@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4369870489430144517}
   - component: {fileID: 5224230791644317166}
   - component: {fileID: 3858701992307841138}
+  - component: {fileID: 3786064262727270257}
   m_Layer: 0
   m_Name: Standard Hitscan Bullet
   m_TagString: Untagged
@@ -236,3 +237,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_bulletData: {fileID: 11400000, guid: d9f9e3ed1e652c24b9d4493bf90255da, type: 2}
   m_hitscanBulletVisual: {fileID: 5224230791644317166}
+--- !u!114 &3786064262727270257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496542731115884958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b182331fab9a5d3408143a1f4456d65f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Explosion: {fileID: 4690619963441787401, guid: 6f746e0827cb02342b5bc5afd1859ae1,
+    type: 3}
+  m_TimeToMaxExplosion: 0.1
+  m_maxScale: 5

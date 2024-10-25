@@ -14,19 +14,19 @@ public abstract class HitscanBullet : Bullet
 
     private void Awake()
     {
+        Initialze();
+    }
+
+    protected virtual void Initialze() {
         m_hitscanBulletVisual = GetComponent<HitscanBulletVisual>();
-        
-        if(m_bulletData is not HitScanBulletSO){
+
+        if (m_bulletData is not HitScanBulletSO)
+        {
             Debug.LogError("Bullet data is not hitscan data!");
         }
 
         m_hitscanBulletVisual.OnFinishFadeOut += () => {
             Manager.f_bullet.Pool.Release(this);
         };
-
-
     }
-
-
-
 }

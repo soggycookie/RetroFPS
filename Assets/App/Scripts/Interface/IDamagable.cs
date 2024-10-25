@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IDamagable
 {
-    public void ApplyDamage(float healthLost, Vector3 forceDir, float force);
+    public void ApplyDamage(float healthLost);
 }
