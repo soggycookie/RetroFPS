@@ -5,6 +5,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(ProjectileVisual))]
 public abstract class ProjectileBullet : Bullet
 {
     protected ProjectileBulletSO m_projectileData;
@@ -13,12 +14,10 @@ public abstract class ProjectileBullet : Bullet
     protected bool m_isShot;
     protected Vector3 m_traverseDirection;
 
-
     private void Awake()
     {
         Initialize();
     }
-
 
     protected virtual void Initialize(){
         m_projectileData = m_bulletData as ProjectileBulletSO;

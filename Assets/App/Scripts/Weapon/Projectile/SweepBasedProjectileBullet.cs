@@ -12,6 +12,7 @@ public class SweepBasedProjectileBullet : ProjectileBullet
 
     public UnityAction<RaycastHit> OnHit;
 
+
     private void Awake()
     {
         base.Initialize();

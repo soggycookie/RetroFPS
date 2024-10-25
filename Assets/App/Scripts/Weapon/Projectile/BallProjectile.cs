@@ -17,7 +17,6 @@ public class BallProjectile : RigidProjectileBullet
 
 
         SetShootingBullettParams();
-        Debug.Log(transform.position);
 
         DisableBulletAfterDelayAsync(m_cancellationTokenSource.Token);
     }
@@ -25,7 +24,6 @@ public class BallProjectile : RigidProjectileBullet
     private void FixedUpdate()
     {
         if(!m_isShot) return;
-        Debug.Log("update:" + transform.position);
         m_rigidbody.AddForce(m_traverseDirection * m_projectileData.bulletSpeed, ForceMode.Force);
 
     }
