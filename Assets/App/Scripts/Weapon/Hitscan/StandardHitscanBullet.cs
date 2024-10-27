@@ -6,9 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(HitscanBulletVisual))]
 public class StandardHitscanBullet : HitscanBullet
 {
-
-
-
     public override void Shoot()
     {
         HitScanBulletSO m_hitscanData = m_bulletData as HitScanBulletSO;
@@ -28,9 +25,9 @@ public class StandardHitscanBullet : HitscanBullet
         {
             linePos = new Vector3[] { Manager.MuzzlePoint.position, hit.point};
             
-            Explosion explosion = FindAnyObjectByType<Explosion>();
-            
-            explosion.Explode(hit.point, 5, m_bulletData.damagableLayer);
+            Explosion explosion = GlobalExplosionFactory.Instance.Pool.Get();
+
+            explosion.Explode(hit.point, m_bulletData.damagableLayer);
         }
 
         OnShoot?.Invoke(linePos);

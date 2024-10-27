@@ -46,7 +46,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b182331fab9a5d3408143a1f4456d65f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_timeToMaxExplosion: 5
+  m_timeToMaxExplosion: 0.1
+  m_animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1191284
+      value: 0.7141165
+      inSlope: 0.19755957
+      outSlope: 0.19755957
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.104008384
+    - serializedVersion: 3
+      time: 0.48213094
+      value: 0.74651414
+      inSlope: 0.84947956
+      outSlope: 0.84947956
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.113641724
+    - serializedVersion: 3
+      time: 0.93792284
+      value: 0.932156
+      inSlope: 0.086767435
+      outSlope: 0.086767435
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33944768
+      outWeight: 1
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &174629788286355917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_explosionVisual: {fileID: 2616979205612380155}
+  m_radius: 7
 --- !u!1001 &4816102162775925613
 PrefabInstance:
   m_ObjectHideFlags: 0
