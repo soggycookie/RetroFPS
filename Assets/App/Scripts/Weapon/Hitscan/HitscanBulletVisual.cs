@@ -16,7 +16,6 @@ public class HitscanBulletVisual : MonoBehaviour
     [SerializeField]
     private float           m_fadeOutTime;
 
-    [SerializeField]
     private Gradient        m_baseGradient;
     private AnimationCurve  m_baseCurve;
 

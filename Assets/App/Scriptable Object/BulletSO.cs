@@ -26,6 +26,8 @@ public abstract class BulletSO : ScriptableObject
     public float damagePerShot;
     public int   bulletsPerShot;
 
+    public bool  explodeOnContact;
+    public float explosionRadius;
 
     public abstract ExecutionType GetBulletType();
 

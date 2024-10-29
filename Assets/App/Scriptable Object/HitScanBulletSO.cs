@@ -8,13 +8,16 @@ public class HitScanBulletSO : BulletSO
 
     public float maxDistance;
 
-    public bool  isPiercing;
-    public bool  isRicochet;
-    public int   maxRicochetTime;
+    public bool isPiercing;
+    public bool isRicochet;
+    public int maxRicochetTime;
 
-    public bool  hasRadius;
-    public float radius;
+    public bool  hitHasRadius;
+    public float hitRadius;
 
+
+    public bool  isHoming;
+    public float homingRadius;
 
     public override ExecutionType GetBulletType()
     {
@@ -38,6 +41,10 @@ public class HitScanBulletSO : BulletSO
             maxRicochetTime = 0;
         }
 
+        if(!isPiercing && hitHasRadius ){
+            Debug.LogWarning("to make hit has radius");
+            hitHasRadius = false;
+        }
 
     }
 

@@ -8,13 +8,6 @@ using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
 {
-
-    enum ShotCategory
-    {
-        STANDARD,
-        SPECIAL
-    }
-
     public bool IsGunDisable { get; set;}
 
 

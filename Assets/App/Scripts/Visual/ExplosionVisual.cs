@@ -11,11 +11,14 @@ public class ExplosionVisual : MonoBehaviour
     [SerializeField]
     private AnimationCurve m_animationCurve;
 
+    [SerializeField]
+    private MeshRenderer[] m_meshRenderers;
 
     private Explosion m_explosion;
-    private Material  m_material;
 
-    private float maxFadeOutTime;
+
+    private float[] m_maxFadeOutTime;
+    private Material[] m_materials;
 
     Coroutine lerpScale;
     Coroutine lerpFadeout;
@@ -23,10 +26,23 @@ public class ExplosionVisual : MonoBehaviour
     private void Awake()
     {
         m_explosion = GetComponent<Explosion>();
-        m_material = GetComponentInChildren<MeshRenderer>().material;
 
-        maxFadeOutTime = m_material.GetFloat("_MaxFadeOutTime");
+        m_materials = new Material[m_meshRenderers.Length];
+        m_maxFadeOutTime = new float[m_meshRenderers.Length];
 
+        for(int i =0; i < m_meshRenderers.Length; i++){
+            m_materials[i] = m_meshRenderers[i].material;
+            m_maxFadeOutTime[i] = m_materials[i].GetFloat("_MaxFadeOutTime");
+        }
+
+    }
+
+    private void OnEnable()
+    {
+        for (int i = 0; i < m_meshRenderers.Length; i++)
+        {
+            m_materials[i].SetFloat("_FadeOutTime", 0f);
+        }
     }
 
     public void Explode(float radius, Vector3 position){
@@ -44,8 +60,8 @@ public class ExplosionVisual : MonoBehaviour
     {
         float timer = 0;
         float scale = radius * 2f;
-        m_material.SetFloat("_FadeOutTime", 0);
-        m_material.SetFloat("_Alpha", 0.5f);
+
+
 
         while (true)
         {
@@ -75,9 +91,15 @@ public class ExplosionVisual : MonoBehaviour
 
         while (true)
         {
-            m_material.SetFloat("_FadeOutTime", maxFadeOutTime * m_animationCurve.Evaluate(timer / maxFadeOutTime));
+            m_explosion.transform.localScale +=  (timer / m_maxFadeOutTime[2]) * Vector3.one * 0.1f;
 
-            if (timer >= maxFadeOutTime)
+            for (int i = 0; i < m_meshRenderers.Length; i++)
+            {
+                m_materials[i].SetFloat("_FadeOutTime", m_maxFadeOutTime[i] * m_animationCurve.Evaluate(timer / m_maxFadeOutTime[i]));
+
+            }
+
+            if (timer >= m_maxFadeOutTime[2])
             {
                 break;
             }

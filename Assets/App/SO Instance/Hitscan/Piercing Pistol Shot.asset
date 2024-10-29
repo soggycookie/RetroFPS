@@ -26,9 +26,13 @@ MonoBehaviour:
   bulletCoolDown: 1
   damagePerShot: 10
   bulletsPerShot: 1
+  explodeOnContact: 0
+  explosionRadius: 0
   maxDistance: 300
   isPiercing: 1
   isRicochet: 0
   maxRicochetTime: 0
-  hasRadius: 1
-  radius: 0.3
+  hitHasRadius: 1
+  hitRadius: 0.2
+  isHoming: 0
+  homingRadius: 0

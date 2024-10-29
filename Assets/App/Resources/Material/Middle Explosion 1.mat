@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Explosion v2
+  m_Name: Middle Explosion 1
   m_Shader: {fileID: -6465566751694194690, guid: 6b9249ebba4c25d49b54b72ecbf2816e,
     type: 3}
   m_Parent: {fileID: 0}
@@ -39,16 +39,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.5
+    - _Alpha: 0.7
     - _FadeOutTime: 0
-    - _MaxFadeOutTime: 0.1
+    - _MaxFadeOutTime: 0.2
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ShardSpreadSpeed: 1
-    m_Colors: []
+    m_Colors:
+    - _Color: {r: 2.1185474, g: 0.62188506, b: 0, a: 0.57254905}
+    - _Emission_Color: {r: 4.0000005, g: 1.5933553, b: 0.20942405, a: 0.6156863}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &9163650416743169302
+--- !u!114 &1693797334278242760
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
