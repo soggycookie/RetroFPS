@@ -48,35 +48,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b182331fab9a5d3408143a1f4456d65f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_timeToMaxExplosion: 0.1
-  m_animationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  m_timeToMaxExplosion: 0.15
   m_meshRenderers:
   - {fileID: 2756497668748818237}
   - {fileID: 3127802636993727639}
   - {fileID: 6628902868733632583}
+  m_maxFadeOutTime:
+  - 0.12
+  - 0.2
+  - 0.27
+  m_defaultColorAlpha:
+  - 0.6
+  - 0.5
+  - 0.25
 --- !u!114 &6298599534367594591
 MonoBehaviour:
   m_ObjectHideFlags: 0

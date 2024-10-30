@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,32 +10,38 @@ public class ExplosionVisual : MonoBehaviour
     private float m_timeToMaxExplosion;
 
     [SerializeField]
-    private AnimationCurve m_animationCurve;
-
-    [SerializeField]
     private MeshRenderer[] m_meshRenderers;
 
-    private Explosion m_explosion;
-
-
+    [SerializeField]
     private float[] m_maxFadeOutTime;
-    private Material[] m_materials;
+    
+    [SerializeField]
+    private float[] m_defaultColorAlpha;
 
-    Coroutine lerpScale;
-    Coroutine lerpFadeout;
+    private Explosion m_explosion;
+    private Material[] m_materials;
 
     private void Awake()
     {
         m_explosion = GetComponent<Explosion>();
 
         m_materials = new Material[m_meshRenderers.Length];
-        m_maxFadeOutTime = new float[m_meshRenderers.Length];
 
         for(int i =0; i < m_meshRenderers.Length; i++){
             m_materials[i] = m_meshRenderers[i].material;
-            m_maxFadeOutTime[i] = m_materials[i].GetFloat("_MaxFadeOutTime");
+            m_materials[i].SetFloat("_MaxFadeOutTime", m_maxFadeOutTime[i]);
         }
 
+    }
+
+    void SetMaterialsColorAlpha(){
+        for (int i = 0; i < m_materials.Length; i++)
+        {
+            Vector4 color = (Vector4)m_materials[i].color;
+            color = new Vector4(color.x , color.y, color.z, m_defaultColorAlpha[i]);
+
+            m_materials[i].color = color;
+        }
     }
 
     private void OnEnable()
@@ -43,72 +50,48 @@ public class ExplosionVisual : MonoBehaviour
         {
             m_materials[i].SetFloat("_FadeOutTime", 0f);
         }
+
+        SetMaterialsColorAlpha();
     }
 
     public void Explode(float radius, Vector3 position){
 
-        if(lerpScale != null)
-            StopCoroutine(lerpScale);
-
-        lerpScale = StartCoroutine(LerpScale( radius));
-        
-    }
-
-
-
-    IEnumerator LerpScale(float radius)
-    {
-        float timer = 0;
         float scale = radius * 2f;
+        
+        Sequence explosionSequence;
+        explosionSequence = CreateExplosionAnimation(scale);
 
+        explosionSequence.Play();
 
-
-        while (true)
-        {
-            m_explosion.transform.localScale = Vector3.one * (timer / m_timeToMaxExplosion * scale);
-
-            if (timer >= m_timeToMaxExplosion)
-            {
-                break;
-            }
-
-            timer += Time.deltaTime;
-
-            yield return null;
-        }
-
-
-        if (lerpFadeout != null)
-            StopCoroutine(lerpFadeout);
-
-        lerpFadeout = StartCoroutine(LerpFadeOut());
     }
 
-    IEnumerator LerpFadeOut()
+    Sequence CreateExplosionAnimation(float scale)
     {
-        yield return new WaitForSeconds(0.1f);
-        float timer = 0;
+        Sequence explosionSequence = DOTween.Sequence();
 
-        while (true)
-        {
-            m_explosion.transform.localScale +=  (timer / m_maxFadeOutTime[2]) * Vector3.one * 0.1f;
+        transform.localScale = Vector3.zero;
 
-            for (int i = 0; i < m_meshRenderers.Length; i++)
-            {
-                m_materials[i].SetFloat("_FadeOutTime", m_maxFadeOutTime[i] * m_animationCurve.Evaluate(timer / m_maxFadeOutTime[i]));
+        explosionSequence.Append(transform.DOScale(scale, m_timeToMaxExplosion).SetEase(Ease.InOutQuint));
+        explosionSequence.AppendInterval(0.1f);
+        explosionSequence.Append(FadeOut());
+        explosionSequence.Insert(0f, transform.DOScale(scale * 1.3f , m_timeToMaxExplosion).SetEase(Ease.InQuad));
 
-            }
+        explosionSequence.OnComplete(
+            () => {
+                GlobalExplosionFactory.Instance.Pool.Release(m_explosion);
+            });
 
-            if (timer >= m_maxFadeOutTime[2])
-            {
-                break;
-            }
+        return explosionSequence;
+    }
 
-            timer += Time.deltaTime;
+    Sequence FadeOut(){
+        Sequence fadeOutSeq = DOTween.Sequence();
 
-            yield return null;
+        for (int i = 0;i < m_materials.Length; i++){
+            Tween fadeOut = m_materials[i].DOFade(0 , m_maxFadeOutTime[i]);
+            fadeOutSeq.Insert(0, fadeOut);
         }
 
-        GlobalExplosionFactory.Instance.Pool.Release(m_explosion);
+        return fadeOutSeq;
     }
 }

@@ -1362,7 +1362,7 @@ MonoBehaviour:
   m_playerInputHandler: {fileID: 1636277010}
   m_visualObject: {fileID: 1105090571}
   m_standardTriggerMode: 1
-  m_standardBulletPrefab: {fileID: 3858701992307841138, guid: 30ae3ddfd416c9f48835198307ad6b94,
+  m_standardBulletPrefab: {fileID: 3463510180437506436, guid: 30ae3ddfd416c9f48835198307ad6b94,
     type: 3}
   m_standardDefaultCapacity: 3
   m_standardMaxCapacity: 5
@@ -1371,7 +1371,7 @@ MonoBehaviour:
   m_standardDamageMultiplier: 1
   m_standardTotalChargingTime: 2
   m_specialTriggetMode: 2
-  m_specialBulletPrefab: {fileID: 3008687179652200724, guid: 2fd83cbfc3a4a374a95db9ae6db96e48,
+  m_specialBulletPrefab: {fileID: 8847723782683125360, guid: 2fd83cbfc3a4a374a95db9ae6db96e48,
     type: 3}
   m_specialDefaultCapacity: 3
   m_specialMaxCapacity: 5
