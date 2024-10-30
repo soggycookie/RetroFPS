@@ -2,19 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Scriptable/Weapon/Gun Variant")]
 public class GunVariantSO : ScriptableObject
 {
-
-
-    [Header("Gun Settings")]
-    public Transform muzzlePoint;
-    public GameObject gunVisual;
-
 
     [Space(10)]
     [Header("Standard")]
 
-    public TriggerMode m_standardTriggerMode;
+    public TriggerMode standardTriggerMode;
 
     public Bullet standardBulletPrefab;
 

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
@@ -17,24 +18,37 @@ public class FPSCamera : MonoBehaviour
     [SerializeField]
     private CinemachinePanTilt                 m_panTilt;
 
-    [SerializeField]
-    private AnimationCurve                     m_FOVLerpCurve;
+
 
 
     [Space(10)]
     [SerializeField]
     private float m_slamShakeTime = 1f;
-    
+
+    [SerializeField]
+    private Vector3 m_shakeStrength;
+
+    [SerializeField]
+    private float m_amplitude;
+
+    [SerializeField]
+    private float m_frequency;
+
+
+    [Header("FOV config")]
     [SerializeField]
     private float m_lerpTimeFOV   = 1f;
 
     [SerializeField]
     private float m_maxValueFOV   = 120f;
 
+    [SerializeField]
+    private AnimationCurve m_FOVLerpCurve;
 
     private float m_FOV;
     private float m_defaultFOV;
 
+    private float m_currentAmplitude;
 
     private Coroutine m_increaseFOV;
 
@@ -48,8 +62,8 @@ public class FPSCamera : MonoBehaviour
 
 
         m_playerMovement.OnSlam     += CameraShake;
-        m_playerMovement.OnDash     += IncreaseFOV;
-        m_playerMovement.OnExitDash += DecreaseFOV;
+        //m_playerMovement.OnDash     += IncreaseFOV;
+        //m_playerMovement.OnExitDash += DecreaseFOV;
          
 
         m_panTilt.PanAxis.Value = m_playerMovement.transform.eulerAngles.y;
@@ -62,10 +76,17 @@ public class FPSCamera : MonoBehaviour
         return rotation;
     }
 
-    void CameraShake()
+    public void CameraShake()
     {
-        m_cameraNoise.AmplitudeGain = 2f;
-        StartCoroutine(StopCameraShaking());
+        m_cameraNoise.PivotOffset = m_shakeStrength;
+        m_cameraNoise.AmplitudeGain = m_amplitude;
+        m_cameraNoise.FrequencyGain = m_frequency;
+
+        DOVirtual.Float(m_amplitude, 0f, m_slamShakeTime, v =>{
+            m_cameraNoise.AmplitudeGain = v;
+        });
+
+        //StartCoroutine(StopCameraShaking());
     }
 
     IEnumerator StopCameraShaking() {
@@ -134,7 +155,7 @@ public class FPSCamera : MonoBehaviour
     private void OnDisable()
     {
         m_playerMovement.OnSlam -= CameraShake;
-        m_playerMovement.OnDash -=IncreaseFOV;
-        m_playerMovement.OnExitDash -=DecreaseFOV;
+        //m_playerMovement.OnDash -=IncreaseFOV;
+        //m_playerMovement.OnExitDash -=DecreaseFOV;
     }
 }

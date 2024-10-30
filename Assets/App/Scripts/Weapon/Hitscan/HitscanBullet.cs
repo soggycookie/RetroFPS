@@ -172,9 +172,9 @@ public class HitscanBullet : Bullet
         {
             linePos = new Vector3[] { Manager.MuzzlePoint.position, hit.point };
 
-            Explosion explosion = GlobalExplosionFactory.Instance.Pool.Get();
+            //Explosion explosion = GlobalExplosionFactory.Instance.Pool.Get();
 
-            explosion.Explode(hit.point, m_bulletData.damagableLayer);
+            //explosion.Explode(hit.point, m_bulletData.damagableLayer);
         }
 
         return linePos;

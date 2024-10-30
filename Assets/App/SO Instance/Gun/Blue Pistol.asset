@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733ae28f630a6e343b40a0c3af4649cf, type: 3}
+  m_Name: Blue Pistol
+  m_EditorClassIdentifier: 
+  standardTriggerMode: 1
+  standardBulletPrefab: {fileID: 3463510180437506436, guid: 30ae3ddfd416c9f48835198307ad6b94,
+    type: 3}
+  standardDefaultCapacity: 3
+  standardMaxCapacity: 5
+  standardSwitchDelay: 0.3
+  standardDamageMultiplier: 1
+  standardTotalChargingTime: 2
+  specialTriggetMode: 2
+  specialBulletPrefab: {fileID: 8847723782683125360, guid: 2fd83cbfc3a4a374a95db9ae6db96e48,
+    type: 3}
+  specialDefaultCapacity: 3
+  specialMaxCapacity: 5
+  specialSwitchDelay: 0.3
+  specialDamageMultiplier: 1
+  specialTotalChargingTime: 0.5

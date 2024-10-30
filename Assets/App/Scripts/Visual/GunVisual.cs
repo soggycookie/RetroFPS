@@ -2,16 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunVisual : MonoBehaviour
+public abstract class GunVisual : MonoBehaviour
 {
-    Animation anim;
+    [SerializeField]
+    protected Transform m_visualTransform;
 
-    void Start()
+
+    protected Transform m_defaultRootTransform;
+    protected bool m_isCharging;
+    protected bool m_isShooting;
+
+    private void Awake()
     {
-        anim = GetComponent<Animation>();
+        m_defaultRootTransform = m_visualTransform;
     }
 
-    public void Play(){
-        anim.Play();
-    }
+    public abstract void OnShooting();
+    public abstract void OnCharging();
+
 }

@@ -11,8 +11,10 @@ public abstract class ShootingHandler
     protected Gun                 m_gunController;
     protected TriggerMode         m_shotTriggerMode;
     protected Transform           m_muzzlePoint;
+    protected Transform           m_cameraTransform;
     protected Bullet              m_bullet;
     protected float               m_damageMultiplier;
+    protected bool                m_canChargeEventSend = true;
 
     public    BulletManager       BulletManager     { get; protected set;}
     
@@ -22,13 +24,15 @@ public abstract class ShootingHandler
     private BulletSO.ExecutionType m_bulletType;
 
 
-    public    UnityAction         manualShot;
+    public    UnityAction         OnShooting;
+    public    UnityAction         OnCharging;
 
     public abstract bool HandleInput(GunInput input);
 
     protected BulletManager AddBulletBehaviorComponent(bool hasCollectionCheck , int defaultCapacity, int maxCapacity)
     {
         BulletManager manager = m_gunController.gameObject.AddComponent<BulletManager>();
+        manager.FPSCamera     = m_cameraTransform;
         manager.MuzzlePoint   = m_muzzlePoint;
         manager.BulletPrefab  = m_bullet;
         manager.BulletData    = m_bullet.GetBulletData();
@@ -37,13 +41,14 @@ public abstract class ShootingHandler
         return manager;
     }
 
-    public void InitializeShotHandler(Gun controller, Bullet bullet, Transform muzzlePoint, TriggerMode mode,
+    public void InitializeShotHandler(Gun controller, Bullet bullet, Transform camera, Transform muzzlePoint, TriggerMode mode,
         bool hasCollectionCheck, int defaultCapacity , int maxCapacity, float totalChargeTime, float damageMultiplier)
     {
 
         m_gunController    = controller;
         m_muzzlePoint      = muzzlePoint;
         m_shotTriggerMode  = mode;
+        m_cameraTransform  = camera;
 
         m_damageMultiplier = damageMultiplier;
         TotalChargeTime    = totalChargeTime;
@@ -62,10 +67,10 @@ public abstract class ShootingHandler
 
 public class StandardShootingHandler : ShootingHandler
 {
-    public StandardShootingHandler(Gun controller, Bullet bullet, Transform muzzlePoint, TriggerMode mode,
+    public StandardShootingHandler(Gun controller, Bullet bullet, Transform camera, Transform muzzlePoint, TriggerMode mode,
         bool hasCollectionCheck , int defaultCapacity , int maxCapacity, float totalChargeTime, float damageMultipler ){
 
-        InitializeShotHandler(controller, bullet, muzzlePoint, mode, hasCollectionCheck, defaultCapacity, maxCapacity, totalChargeTime, damageMultipler);
+        InitializeShotHandler(controller, bullet, camera, muzzlePoint, mode, hasCollectionCheck, defaultCapacity, maxCapacity, totalChargeTime, damageMultipler);
 
         if (m_shotTriggerMode == TriggerMode.CHARGING)
         {
@@ -89,11 +94,11 @@ public class StandardShootingHandler : ShootingHandler
             case TriggerMode.MANUAL:
                 if (input.lmbPressed)
                 {
-                    manualShot?.Invoke();
                     BulletManager.Shoot();
 
-                    return true;
+                    OnShooting?.Invoke();
 
+                    return true;
                 }
                 break;
             case TriggerMode.AUTOMATIC:
@@ -101,6 +106,8 @@ public class StandardShootingHandler : ShootingHandler
 
                     BulletManager.Shoot();
 
+                    OnShooting?.Invoke();
+                 
                     return true;
                 }
                 break;
@@ -113,6 +120,10 @@ public class StandardShootingHandler : ShootingHandler
                     {
                         CurrentChargeTime = TotalChargeTime;
                     }
+                    if(m_canChargeEventSend){
+                        OnCharging?.Invoke();
+                        m_canChargeEventSend = false;
+                    }
                 }
 
                 if (input.lmbReleased)
@@ -120,6 +131,10 @@ public class StandardShootingHandler : ShootingHandler
                     CurrentChargeTime = 0;
 
                     BulletManager.Shoot();
+
+                    OnShooting?.Invoke();
+
+                    m_canChargeEventSend = true;
 
                     return true;
                 }
@@ -134,11 +149,11 @@ public class StandardShootingHandler : ShootingHandler
 public class SpecialShootingHandler : ShootingHandler
 {
 
-    public SpecialShootingHandler(Gun controller, Bullet bullet, Transform muzzlePoint, TriggerMode mode,
+    public SpecialShootingHandler(Gun controller, Bullet bullet, Transform camera, Transform muzzlePoint, TriggerMode mode,
         bool hasCollectionCheck, int defaultCapacity, int maxCapacity, 
          float totalChargeTime, float damageMultipler)
     {
-        InitializeShotHandler(controller, bullet, muzzlePoint, mode, hasCollectionCheck, defaultCapacity, maxCapacity, totalChargeTime, damageMultipler);
+        InitializeShotHandler(controller, bullet, camera, muzzlePoint, mode, hasCollectionCheck, defaultCapacity, maxCapacity, totalChargeTime, damageMultipler);
 
         if(m_shotTriggerMode == TriggerMode.CHARGING){
             if(TotalChargeTime <= 0f || m_damageMultiplier <= 0f){
@@ -162,14 +177,15 @@ public class SpecialShootingHandler : ShootingHandler
             case TriggerMode.MANUAL:
                 if (input.rmbPressed)
                 {
-                    manualShot?.Invoke();
+                    OnShooting?.Invoke();
                     BulletManager.Shoot();
                     return true;
                 }
 
                 break;
             case TriggerMode.AUTOMATIC:
-                if ( (input.rmbHeld || input.rmbPressed) && !input.lmbHeld){ 
+                if ( (input.rmbHeld || input.rmbPressed) && !input.lmbHeld){
+                    OnShooting?.Invoke();
                     BulletManager.Shoot();
                     return true; 
                 }
@@ -181,12 +197,22 @@ public class SpecialShootingHandler : ShootingHandler
                     if(CurrentChargeTime >= TotalChargeTime){
                         CurrentChargeTime = TotalChargeTime;
                     }
+
+                    if(m_canChargeEventSend){
+                        OnCharging?.Invoke();
+                        Debug.Log("call");
+
+                        m_canChargeEventSend = false;
+                    }
                 }
 
                 if(input.rmbReleased && !input.lmbHeld){
                     CurrentChargeTime = 0;
 
                     BulletManager.Shoot();
+
+                    OnShooting?.Invoke();
+                    m_canChargeEventSend = true;
 
                     return true;
                 }

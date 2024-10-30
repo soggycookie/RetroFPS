@@ -82,7 +82,6 @@ public class BulletManager : MonoBehaviour
 
     private void Initialize()
     {
-        FPSCamera = Camera.main.transform;
         m_canShoot = true;
     }
 

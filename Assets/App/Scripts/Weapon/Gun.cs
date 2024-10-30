@@ -14,6 +14,8 @@ public class Gun : MonoBehaviour
     [Header("Gun Settings")]
     [SerializeField]
     private Transform          m_muzzlePoint;
+    [SerializeField]
+    private Transform          m_cameraTransform;
 
     [SerializeField]
     private PlayerInputHandler m_playerInputHandler;
@@ -21,84 +23,15 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private GameObject         m_visualObject;
 
-    //[SerializeField]
-    //private float swapTime = 0.5f;
-
-    [Space(10)]
-    [Header("Standard")]
-
     [SerializeField]
-    private TriggerMode  m_standardTriggerMode;
-                         
-
-    [SerializeField]
-    private Bullet       m_standardBulletPrefab;
-
-    [SerializeField]     
-    private int          m_standardDefaultCapacity;
-                         
-    [SerializeField]     
-    private int          m_standardMaxCapacity;
-                         
-    [SerializeField]     
-    private bool         m_standardHasCollectionCheck;
-                         
-    [SerializeField]     
-    private float        m_standardSwitchDelay;
-
-    [Space(5)]
-    [Header("Standard Charging Settings")]
-    [SerializeField]
-    private float        m_standardDamageMultiplier;
-
-    [SerializeField]
-    private float        m_standardTotalChargingTime;
-
-
-
-    [Space(10)]
-    [Header("Special")]
-
-    [SerializeField]
-    private TriggerMode  m_specialTriggetMode;
-
-    
-    [SerializeField]
-    private Bullet       m_specialBulletPrefab;
-    
-    [SerializeField]
-    private int          m_specialDefaultCapacity;
-
-    [SerializeField]
-    private int          m_specialMaxCapacity;
-
-    [SerializeField]
-    private bool         m_specialHasCollectionCheck;
-
-    [SerializeField]
-    private float        m_specialSwitchDelay;
-
-    [Space(5)]
-    [Header("Special Charging Settings")]
-    [SerializeField]
-    private float        m_specialDamageMultiplier;
-
-    [SerializeField]
-    private float        m_specialTotalChargingTime;
-
-
-    [Space(10)]
-    [SerializeField]
-    private bool         m_specialDependOnStandardInput;
-
+    private GunVariantSO       m_variantData;
 
     private float        m_switchDelayTime;
     private float        m_currentExitTime;
     private bool         m_canTrigger;
     private GunInput     m_gunInput;
-    private GunVisual    m_visual;
     private ChargingUI   m_chargingUI;
-
+    private GunVisual    m_gunVisual;
 
     private StandardShootingHandler m_standardShotHandler;
     private SpecialShootingHandler  m_specialShotHandler;
@@ -106,23 +39,29 @@ public class Gun : MonoBehaviour
 
     private void Awake()
     {
-        m_visual = GetComponentInChildren<GunVisual>();
         m_chargingUI = GetComponentInChildren<ChargingUI>();
-
+        m_gunVisual  = GetComponentInChildren<GunVisual>();
+        FPSCamera cam = m_cameraTransform.GetComponent<FPSCamera>();
 
         if (m_playerInputHandler == null)
             m_playerInputHandler = FindAnyObjectByType<PlayerInputHandler>();
 
-        m_standardShotHandler = new StandardShootingHandler(this, m_standardBulletPrefab, m_muzzlePoint, m_standardTriggerMode,
-            m_standardHasCollectionCheck, m_standardDefaultCapacity, m_standardMaxCapacity, 
-            m_standardTotalChargingTime, m_standardDamageMultiplier);
+        m_standardShotHandler = new StandardShootingHandler(this, m_variantData.standardBulletPrefab,m_cameraTransform, m_muzzlePoint, m_variantData.standardTriggerMode,
+            true, m_variantData.standardDefaultCapacity, m_variantData.standardMaxCapacity,
+            m_variantData.standardTotalChargingTime, m_variantData.standardDamageMultiplier);
 
-        m_specialShotHandler  = new SpecialShootingHandler(this, m_specialBulletPrefab, m_muzzlePoint, m_specialTriggetMode, 
-            m_specialHasCollectionCheck, m_specialDefaultCapacity, m_specialMaxCapacity ,
-            m_specialTotalChargingTime, m_specialDamageMultiplier);
+        m_specialShotHandler  = new SpecialShootingHandler(this, m_variantData.specialBulletPrefab, m_cameraTransform, m_muzzlePoint, m_variantData.specialTriggetMode,
+            true, m_variantData.specialDefaultCapacity, m_variantData.specialMaxCapacity ,
+            m_variantData.specialTotalChargingTime, m_variantData.specialDamageMultiplier);
 
-        //m_standardShotHandler.manualShot += m_visual.Play ;
-        //m_specialShotHandler.manualShot += m_visual.Play;
+        m_standardShotHandler.OnShooting += m_gunVisual.OnShooting;
+        m_specialShotHandler. OnShooting += m_gunVisual.OnShooting;
+
+        m_specialShotHandler. OnShooting += cam.CameraShake;
+        m_standardShotHandler.OnShooting += cam.CameraShake;
+
+        m_standardShotHandler.OnCharging += m_gunVisual.OnCharging;
+        m_specialShotHandler. OnCharging += m_gunVisual.OnCharging;
         m_canTrigger = true;
 
         m_chargingUI.ShootingHandler = m_specialShotHandler;
@@ -154,11 +93,11 @@ public class Gun : MonoBehaviour
 
 
         if(m_standardShotHandler.HandleInput(m_gunInput)){
-            m_switchDelayTime = m_standardSwitchDelay;
+            m_switchDelayTime = m_variantData.standardSwitchDelay;
             DisableShooting();
         }
         else if(m_specialShotHandler.HandleInput(m_gunInput)){
-            m_switchDelayTime = m_specialSwitchDelay;
+            m_switchDelayTime = m_variantData.specialSwitchDelay;
             DisableShooting();
         }
     }
