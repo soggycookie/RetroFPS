@@ -42,4 +42,7 @@ MonoBehaviour:
   slideForce: 200
   maxSlidingVelocity: 20
   groundSlamForce: 700
-  frozenSlamTime: 0.2
+  shakeDuration: 0.3
+  pivotOffset: {x: 20, y: 20, z: 12}
+  amplitude: 20
+  frequency: 2

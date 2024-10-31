@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4948ce309cacd744a4b28bec5a7988b, type: 3}
+  m_Name: Pistol 1
+  m_EditorClassIdentifier: 
+  shakeStrength: {x: 0.01, y: 0.01, z: 0.015}
+  vibrate: {x: 10, y: 12, z: 20}
+  randomness: {x: 20, y: 40, z: 7}
+  recoilPosOffset: {x: 0, y: 0.2, z: -0.3}
+  recoilPosEase: 18
+  recoilDegOffset: {x: -60, y: 0, z: 0}
+  recoilDegEase: 18
+  durationBeforeGoToOrigin: 0.15
+  pullRecoilDuration: 0.1
+  goBackToOriginDuration: 0.2
+  posBackToOriginEase: 12
+  rotationBackToOriginEase: 12
+  shakeDuration: 0.2
+  pivotOffset: {x: 20, y: 12, z: 8}
+  amplitude: 10
+  frequency: 2

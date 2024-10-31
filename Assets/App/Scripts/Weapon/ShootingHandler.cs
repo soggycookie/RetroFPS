@@ -200,7 +200,6 @@ public class SpecialShootingHandler : ShootingHandler
 
                     if(m_canChargeEventSend){
                         OnCharging?.Invoke();
-                        Debug.Log("call");
 
                         m_canChargeEventSend = false;
                     }

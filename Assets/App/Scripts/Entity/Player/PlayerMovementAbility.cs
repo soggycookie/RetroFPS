@@ -45,14 +45,14 @@ public class PlayerMovementAbility : MonoBehaviour
 
 
 
-    public UnityAction                OnDash;
-    public UnityAction                OnExitDash;
-    public UnityAction<float, float>  OnSpeedUpdate;
-    public UnityAction<MovementState> OnStateUpdate;
-    public UnityAction                OnSlam;
-    public UnityAction<RaycastHit>    OnSlamDirectHit;
-    public UnityAction<RaycastHit>    OnSlamIndirectHit;
-    public UnityAction<RaycastHit>    OnDashHit;
+    public UnityAction                                 OnDash;
+    public UnityAction                                 OnExitDash;
+    public UnityAction<float, float>                   OnSpeedUpdate;
+    public UnityAction<MovementState>                  OnStateUpdate;
+    public UnityAction<Vector3, float, float, float>   OnSlam;
+    public UnityAction<RaycastHit>                     OnSlamDirectHit;
+    public UnityAction<RaycastHit>                     OnSlamIndirectHit;
+    public UnityAction<RaycastHit>                     OnDashHit;
 
     public float                      CurrentDashEnergy { get; private set; }
 
@@ -60,11 +60,11 @@ public class PlayerMovementAbility : MonoBehaviour
     const float c_gravity = -31f;
 
 
-    private FPSCamera          m_fpsCamera;
-    private Rigidbody          m_rigidbody;
-    private PlayerInputHandler m_inputHandler;
-    private MovementState      m_movementState;
-    private PlayerInput        m_currentInput;
+    private PlayerCameraController   m_fpsCamera;
+    private Rigidbody                m_rigidbody;
+    private PlayerInputHandler       m_inputHandler;
+    private MovementState            m_movementState;
+    private PlayerInput              m_currentInput;
 
 
 
@@ -131,7 +131,7 @@ public class PlayerMovementAbility : MonoBehaviour
         m_collider     = GetComponent<Collider>();
 
 
-        m_fpsCamera    = Camera.main.GetComponent<FPSCamera>();
+        m_fpsCamera    = Camera.main.GetComponent<PlayerCameraController>();
         m_inputHandler = GetComponent<PlayerInputHandler>();
 
         m_rigidbody    = GetComponent<Rigidbody>();
@@ -616,7 +616,7 @@ public class PlayerMovementAbility : MonoBehaviour
 
     void HandleSlamCollisonEnter()
     {
-        OnSlam?.Invoke();
+        OnSlam?.Invoke(m_playerMovementSO.pivotOffset, m_playerMovementSO.amplitude, m_playerMovementSO.frequency, m_playerMovementSO.shakeDuration);
 
         m_storedVelocity  = m_rigidbody.velocity;
         //m_isSlamExit = true;

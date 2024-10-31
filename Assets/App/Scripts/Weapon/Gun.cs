@@ -31,7 +31,7 @@ public class Gun : MonoBehaviour
     private bool         m_canTrigger;
     private GunInput     m_gunInput;
     private ChargingUI   m_chargingUI;
-    private GunVisual    m_gunVisual;
+    private GunAnimation    m_gunAnimation;
 
     private StandardShootingHandler m_standardShotHandler;
     private SpecialShootingHandler  m_specialShotHandler;
@@ -40,8 +40,8 @@ public class Gun : MonoBehaviour
     private void Awake()
     {
         m_chargingUI = GetComponentInChildren<ChargingUI>();
-        m_gunVisual  = GetComponentInChildren<GunVisual>();
-        FPSCamera cam = m_cameraTransform.GetComponent<FPSCamera>();
+        m_gunAnimation  = GetComponentInChildren<GunAnimation>();
+        PlayerCameraController cam = m_cameraTransform.GetComponent<PlayerCameraController>();
 
         if (m_playerInputHandler == null)
             m_playerInputHandler = FindAnyObjectByType<PlayerInputHandler>();
@@ -54,14 +54,11 @@ public class Gun : MonoBehaviour
             true, m_variantData.specialDefaultCapacity, m_variantData.specialMaxCapacity ,
             m_variantData.specialTotalChargingTime, m_variantData.specialDamageMultiplier);
 
-        m_standardShotHandler.OnShooting += m_gunVisual.OnShooting;
-        m_specialShotHandler. OnShooting += m_gunVisual.OnShooting;
+        m_standardShotHandler.OnShooting += m_gunAnimation.Shoot;
+        m_specialShotHandler. OnShooting += m_gunAnimation.Shoot;
 
-        m_specialShotHandler. OnShooting += cam.CameraShake;
-        m_standardShotHandler.OnShooting += cam.CameraShake;
-
-        m_standardShotHandler.OnCharging += m_gunVisual.OnCharging;
-        m_specialShotHandler. OnCharging += m_gunVisual.OnCharging;
+        m_standardShotHandler.OnCharging += m_gunAnimation.Charge;
+        m_specialShotHandler. OnCharging += m_gunAnimation.Charge;
         m_canTrigger = true;
 
         m_chargingUI.ShootingHandler = m_specialShotHandler;
@@ -130,6 +127,15 @@ public class Gun : MonoBehaviour
     {
         IsGunDisable = false;
         m_visualObject.SetActive(true);
+    }
+
+    private void OnValidate()
+    {
+        if(m_variantData){
+            float duration = m_variantData.standardBulletPrefab.GetBulletData().bulletCoolDown;
+            GunAnimation anim = GetComponentInChildren<GunAnimation>();
+            anim.TotalDuration = duration;
+        }
     }
 }
 

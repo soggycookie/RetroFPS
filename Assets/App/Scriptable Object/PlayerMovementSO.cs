@@ -51,5 +51,12 @@ public class PlayerMovementSO : ScriptableObject
     [Space(10)]
     [Header("Slam Settings")]
     public float groundSlamForce = 10f;
-    public float frozenSlamTime = 0.2f;
+    
+    [Header("Slam Camera Shake")]
+    public float   shakeDuration;
+    public Vector3 pivotOffset;
+    public float   amplitude;
+    public float   frequency;
+
+    //public float frozenSlamTime = 0.2f;
 }
