@@ -23,10 +23,12 @@ MonoBehaviour:
   damagableLayer:
     serializedVersion: 2
     m_Bits: 256
-  bulletCoolDown: 1
+  bulletCoolDown: 1.5
   damagePerShot: 20
   bulletsPerShot: 1
+  explodeOnContact: 0
+  explosionRadius: 0
   bulletSpreadOffset: 0
-  bulletSpeed: 400
+  bulletSpeed: 2000
   lifeTime: 1
   collisionRadius: 0.3

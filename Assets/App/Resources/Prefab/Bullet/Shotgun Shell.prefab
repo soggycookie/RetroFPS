@@ -97,7 +97,6 @@ GameObject:
   - component: {fileID: 139972112919004620}
   - component: {fileID: 7002675521313926895}
   - component: {fileID: 7028016431990546600}
-  - component: {fileID: -2444730278555398432}
   m_Layer: 0
   m_Name: Shotgun Shell
   m_TagString: Untagged
@@ -250,18 +249,6 @@ TrailRenderer:
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
 --- !u!114 &7028016431990546600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8708527990757479694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8f7c343b64e0a148b29e383dfe264db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-2444730278555398432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -75,13 +75,29 @@ public class GunAnimationSO : ScriptableObject
     public void AnimateShooting(){
         Sequence seq = DOTween.Sequence();
 
+        //m_animationTransform.DOShakePosition(pullRecoilDuration, shootShakeStrength, shootVibrate, shootRandomness, false, true, ShakeRandomnessMode.Harmonic);
 
-        seq.Append(m_animationTransform.DOLocalMove(m_originTransform.localPosition + recoilPosOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
+        //seq.Append(m_animationTransform.DOLocalMove(m_originTransform.localPosition + recoilPosOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
+
+        seq.SetRelative(true);
+        
+        seq.Append(m_animationTransform.DOBlendableLocalMoveBy(recoilPosOffset, pullRecoilDuration));
+
+        seq.SetRelative(false);
+
+
+
         seq.Join(m_animationTransform.DOLocalRotate(m_originTransform.localEulerAngles + recoilDegOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
+
         seq.AppendInterval(durationBeforeGoToOrigin);
+
         seq.Append(m_animationTransform.DOLocalMove(m_originTransform.localPosition, goBackToOriginDuration).SetEase(Ease.OutQuart));
         seq.Join(m_animationTransform.DOLocalRotate(m_originTransform.localPosition, goBackToOriginDuration).SetEase(Ease.OutQuart));
 
+        //        float duration = durationBeforeGoToOrigin + pullRecoilDuration + goBackToOriginDuration;
+
+        //        seq.Append(m_animationTransform.DOPunchPosition(recoilPosOffset, duration, shootVibrate, 2));
+        //        seq.Join(m_animationTransform.DOPunchRotation(recoilDegOffset, duration, shootVibrate, 2));
     }
 
     public void Cancel(){
