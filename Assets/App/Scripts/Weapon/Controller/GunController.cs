@@ -16,10 +16,14 @@ public class GunController : MonoBehaviour
     {
         m_playerInputHandler = FindAnyObjectByType<PlayerInputHandler>();
 
-        for (int i = 0; i < m_guns.Length; i++) {
-            if (i ==0 ){
+        for (int i = 0; i < m_guns.Length; i++)
+        {
+            if (i == 0)
+            {
                 m_guns[i].EnableVisual();
-            }else{
+            }
+            else
+            {
                 m_guns[i].DisableVisual();
             }
         }
@@ -27,11 +31,17 @@ public class GunController : MonoBehaviour
 
     private void Update()
     {
-        if(m_playerInputHandler.GetQPress()){
+        SwapGuns();
+    }
+
+    void SwapGuns(){
+        if (m_playerInputHandler.GetQPress())
+        {
             m_guns[m_currentIndex].DisableVisual();
             m_currentIndex++;
 
-            if(m_currentIndex >= m_guns.Length){
+            if (m_currentIndex >= m_guns.Length)
+            {
                 m_currentIndex = 0;
             }
 

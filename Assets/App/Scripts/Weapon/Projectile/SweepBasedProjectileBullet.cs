@@ -67,7 +67,6 @@ public class SweepBasedProjectileBullet : ProjectileBullet
     void Traverse()
     {
         transform.position += m_traverseDirection * Time.deltaTime * m_projectileData.bulletSpeed;
-        Debug.Log("update:" + transform.position);
 
     }
 

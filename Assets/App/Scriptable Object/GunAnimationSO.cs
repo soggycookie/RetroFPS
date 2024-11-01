@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditorInternal.ReorderableList;
 
 [CreateAssetMenu(menuName = "Scriptable/Weapon/Gun Animation")]
 public class GunAnimationSO : ScriptableObject
@@ -38,24 +39,36 @@ public class GunAnimationSO : ScriptableObject
     public float      amplitude;
     public float      frequency;
 
-    private Transform  m_animationTransform;
-    private Transform  m_originTransform;
-    private float      m_totalDuration;
+    [Header("Swap Animation")]
+    public float swapDuration;
+    public RotateMode rotateMode;
 
 
+#if UNITY_EDITOR
 
-    #if UNITY_EDITOR
-    
     private bool       m_isInit = false;
-    
-    #endif
 
+#endif
 
+    private Transform m_animationTransform;
+    private Transform m_swapTransform;
+    private float m_totalDuration;
 
-    public void Initialize(Transform animTransform, Transform origin, float totalDuration){
+    private Vector3 m_position;
+    private Vector3 m_rotation;
+
+    private int m_lap;
+    private Vector3 m_axis;
+
+    public void Initialize(Transform animTransform, Vector3 defaultPos, Vector3 defaultRot, Transform swap, float totalDuration, int lap, Vector3 axis){
         m_animationTransform = animTransform;
         m_totalDuration = totalDuration;
-        m_originTransform = origin;
+        m_position = defaultPos;
+        m_rotation = defaultRot;
+        m_swapTransform = swap;
+        m_lap = lap;
+        m_axis = axis;
+
         m_isInit =true;
     }
 
@@ -75,9 +88,7 @@ public class GunAnimationSO : ScriptableObject
     public void AnimateShooting(){
         Sequence seq = DOTween.Sequence();
 
-        //m_animationTransform.DOShakePosition(pullRecoilDuration, shootShakeStrength, shootVibrate, shootRandomness, false, true, ShakeRandomnessMode.Harmonic);
 
-        //seq.Append(m_animationTransform.DOLocalMove(m_originTransform.localPosition + recoilPosOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
 
         seq.SetRelative(true);
         
@@ -87,21 +98,23 @@ public class GunAnimationSO : ScriptableObject
 
 
 
-        seq.Join(m_animationTransform.DOLocalRotate(m_originTransform.localEulerAngles + recoilDegOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
+        seq.Join(m_animationTransform.DOLocalRotate(m_rotation + recoilDegOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
 
         seq.AppendInterval(durationBeforeGoToOrigin);
 
-        seq.Append(m_animationTransform.DOLocalMove(m_originTransform.localPosition, goBackToOriginDuration).SetEase(Ease.OutQuart));
-        seq.Join(m_animationTransform.DOLocalRotate(m_originTransform.localPosition, goBackToOriginDuration).SetEase(Ease.OutQuart));
-
-        //        float duration = durationBeforeGoToOrigin + pullRecoilDuration + goBackToOriginDuration;
-
-        //        seq.Append(m_animationTransform.DOPunchPosition(recoilPosOffset, duration, shootVibrate, 2));
-        //        seq.Join(m_animationTransform.DOPunchRotation(recoilDegOffset, duration, shootVibrate, 2));
+        seq.Append(m_animationTransform.DOLocalMove(m_position, goBackToOriginDuration).SetEase(Ease.OutQuart));
+        seq.Join(m_animationTransform.DOLocalRotate(m_rotation, goBackToOriginDuration).SetEase(Ease.OutQuart));
     }
 
-    public void Cancel(){
-        m_animationTransform = m_originTransform;
+
+    public Sequence AnimateSwap(){
+        Sequence seq = DOTween.Sequence();
+
+
+        seq.Append(m_animationTransform.DOLocalMove(m_position, swapDuration));
+        seq.Join(m_animationTransform.DOLocalRotate(m_rotation + m_axis.normalized *  (-360 * m_lap), swapDuration, rotateMode));
+    
+        return seq;
     }
 
     #if UNITY_EDITOR
@@ -111,9 +124,9 @@ public class GunAnimationSO : ScriptableObject
 
         float duration = durationBeforeGoToOrigin + pullRecoilDuration + goBackToOriginDuration;
 
+
         if(duration > m_totalDuration){
-            EditorApplication.isPlaying = false;
-            Debug.LogWarning("Combination of all durations is greater than total gun duration");
+            Debug.LogError("Combination of all durations is greater than total gun duration");
         }
     }
     #endif

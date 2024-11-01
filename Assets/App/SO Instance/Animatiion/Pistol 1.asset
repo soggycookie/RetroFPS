@@ -28,3 +28,5 @@ MonoBehaviour:
   pivotOffset: {x: 20, y: 12, z: 8}
   amplitude: 10
   frequency: 2
+  swapDuration: 0.4
+  rotateMode: 3

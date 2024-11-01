@@ -47,4 +47,5 @@ public class GunVariantSO : ScriptableObject
     public float specialDamageMultiplier;
 
     public float specialTotalChargingTime;
+
 }

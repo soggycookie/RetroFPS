@@ -121,12 +121,21 @@ public class Gun : MonoBehaviour
     public void DisableVisual(){
         IsGunDisable = true;
         m_visualObject.SetActive(false);
+        
+        m_gunAnimation.CancelAll();
+        m_gunAnimation.MoveToSwapPos();
     }
 
     public void EnableVisual()
     {
         IsGunDisable = false;
         m_visualObject.SetActive(true);
+
+        Swap();
+    }
+
+    public void Swap(){
+        m_gunAnimation.Swap();
     }
 
     private void OnValidate()

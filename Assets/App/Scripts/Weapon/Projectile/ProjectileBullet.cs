@@ -71,7 +71,6 @@ public abstract class ProjectileBullet : Bullet
 
         m_traverseDirection  = CalculateDirection();
         transform.position   = Manager.FPSCamera.position + m_traverseDirection * m_projectileData.collisionRadius;
-        Debug.Log(transform.position);
 
         transform.forward    = m_traverseDirection;
         
