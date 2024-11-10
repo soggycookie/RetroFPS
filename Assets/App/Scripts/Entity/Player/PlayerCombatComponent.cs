@@ -29,7 +29,6 @@ public class PlayerCombatComponent : MonoBehaviour
 
         m_playerMovementAbility.OnSlamDirectHit   += Slam;
         m_playerMovementAbility.OnSlamIndirectHit += SlamIndirect;
-        m_playerMovementAbility.OnDashHit         += Dash;
     }
 
     private void Slam(RaycastHit hit){
@@ -53,10 +52,6 @@ public class PlayerCombatComponent : MonoBehaviour
         {
             enemyBehavior.GetPropeled(Vector3.up, m_indirectSlamForce);
         }
-    }
-
-    private void Dash(RaycastHit hit){
-
     }
 
 

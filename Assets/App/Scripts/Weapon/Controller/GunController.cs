@@ -19,11 +19,11 @@ public class GunController : MonoBehaviour
         {
             if (i == 0)
             {
-                m_guns[i].EnableGunVisual();
+                m_guns[i].SwapTo();
             }
             else
             {
-                m_guns[i].DisableGunVisual();
+                m_guns[i].Swapped();
             }
         }
     }
@@ -37,7 +37,7 @@ public class GunController : MonoBehaviour
     void SwapGuns(){
         if (m_playerInputHandler.GetQPress())
         {
-            m_guns[m_currentIndex].DisableGunVisual();
+            m_guns[m_currentIndex].Swapped();
             m_currentIndex++;
 
             if (m_currentIndex >= m_guns.Length)
@@ -45,7 +45,7 @@ public class GunController : MonoBehaviour
                 m_currentIndex = 0;
             }
 
-            m_guns[m_currentIndex].EnableGunVisual();
+            m_guns[m_currentIndex].SwapTo();
         }
     }
 

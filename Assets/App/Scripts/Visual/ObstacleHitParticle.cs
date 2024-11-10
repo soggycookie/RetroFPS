@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BulletHitVFX : MonoBehaviour
+public class ObstacleHitParticle : MonoBehaviour
 {
     private ParticleSystem m_particleSystem;
 

@@ -619,6 +619,7 @@ Transform:
   - {fileID: 415224980}
   - {fileID: 591613755}
   - {fileID: 1650349951}
+  - {fileID: 1460809518}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0.03, z: 0}
 --- !u!114 &330585547
@@ -1448,10 +1449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fecc68149329fc46a1c0bbf55d378e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_muzzlePoint: {fileID: 840807588039516902}
-  m_cameraTransform: {fileID: 330585546}
-  m_playerInputHandler: {fileID: 1636277010}
-  m_visualObject: {fileID: 1891196118}
+  m_gunVisual: {fileID: 0}
   m_variantData: {fileID: 11400000, guid: 632a7eb8224fd494faae64d5c759693c, type: 2}
   m_standardBulletManager: {fileID: 0}
   m_specialBulletManager: {fileID: 0}
@@ -1707,6 +1705,7 @@ GameObject:
   - component: {fileID: 591613759}
   - component: {fileID: 591613762}
   - component: {fileID: 591613761}
+  - component: {fileID: 591613763}
   m_Layer: 10
   m_Name: Pistol
   m_TagString: Untagged
@@ -1742,10 +1741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fecc68149329fc46a1c0bbf55d378e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_muzzlePoint: {fileID: 2450041103117216192}
-  m_cameraTransform: {fileID: 330585546}
-  m_playerInputHandler: {fileID: 1636277010}
-  m_visualObject: {fileID: 7080402994824721519}
+  m_gunVisual: {fileID: 591613763}
   m_variantData: {fileID: 11400000, guid: c5dcd7f3bebbfbd41bb40fc1024b02b0, type: 2}
   m_standardBulletManager: {fileID: 591613758}
   m_specialBulletManager: {fileID: 591613757}
@@ -1841,6 +1837,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_defaultCapacity: 3
   m_maxCapacity: 5
+--- !u!114 &591613763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591613754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b6280defec4a7a4cbc0441df5d89977, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visual: {fileID: 7080402994824721519}
+  m_gunAnimation: {fileID: 578989123987036791}
 --- !u!1 &614797940
 GameObject:
   m_ObjectHideFlags: 0
@@ -3331,6 +3341,59 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1460809517
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1460809518}
+  - component: {fileID: 1460809519}
+  m_Layer: 0
+  m_Name: Deflect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1460809518
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460809517}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 330585546}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1460809519
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460809517}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 0.3, z: 0.4}
+  m_Center: {x: 0, y: 0, z: 0.3}
 --- !u!1 &1484564184
 GameObject:
   m_ObjectHideFlags: 0
@@ -3995,6 +4058,7 @@ GameObject:
   - component: {fileID: 1636277012}
   - component: {fileID: 1636277015}
   - component: {fileID: 1636277016}
+  - component: {fileID: 1636277017}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -4162,6 +4226,22 @@ MonoBehaviour:
   m_totalHealth: 0
   m_canHeal: 0
   m_healSpeed: 0
+--- !u!114 &1636277017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636277006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85ee4fe0e49a1b4aa9438631cfa4fcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_inputHandler: {fileID: 1636277010}
+  m_movement: {fileID: 1636277009}
+  m_gun:
+  - {fileID: 591613756}
 --- !u!1 &1650349950
 GameObject:
   m_ObjectHideFlags: 0

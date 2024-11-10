@@ -17,9 +17,12 @@ MonoBehaviour:
   groundDrag: 10
   maxWalkingVelocity: 12
   maxSlopeDegAngle: 46
-  ground:
+  groundMask:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 8
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 64
   enemy:
     serializedVersion: 2
     m_Bits: 256

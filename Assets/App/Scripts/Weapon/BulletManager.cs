@@ -1,4 +1,6 @@
 
+using System.ComponentModel;
+using Unity.Collections;
 using UnityEngine;
 
 
@@ -12,6 +14,7 @@ public class BulletManager : MonoBehaviour
     [SerializeField]
     private Transform m_muzzlePoint;
    
+    
 
     public float     CurrentCoolDownTime { get; protected set; }
     public float     BulletCoolDown      { get; protected set; }

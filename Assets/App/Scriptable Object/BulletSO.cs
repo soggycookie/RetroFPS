@@ -11,7 +11,7 @@ public abstract class BulletSO : ScriptableObject
     }
     
     [Header("VFX")]
-    public BulletHitVFX wallHitParticle;
+    public ObstacleHitParticle wallHitParticle;
 
     public bool       usePooling;
     public int        defaultCapactiy;

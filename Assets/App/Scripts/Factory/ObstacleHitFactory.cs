@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 
 public class ObstacleHitFactory : MonoBehaviour
 {
-    public ObjectPool<BulletHitVFX> Pool { get; private set; }
+    public ObjectPool<ObstacleHitParticle> Pool { get; private set; }
     
     [SerializeField]
     private int m_defaultCapacity;
@@ -14,15 +14,15 @@ public class ObstacleHitFactory : MonoBehaviour
     private int m_maxCapacity;
    
 
-    public void CreatePool(BulletHitVFX prefab)
+    public void CreatePool(ObstacleHitParticle prefab)
     {
         GameObject poolGO = new GameObject("Paricle pool");
         poolGO.transform.position = Vector3.up * 100f;
 
-        Pool = new ObjectPool<BulletHitVFX>(() => {
+        Pool = new ObjectPool<ObstacleHitParticle>(() => {
 
             //Debug.Log("before");
-            BulletHitVFX obj= Instantiate(prefab, poolGO.transform);
+            ObstacleHitParticle obj= Instantiate(prefab, poolGO.transform);
             obj.Factory = this;
 
             //Debug.Log("after");

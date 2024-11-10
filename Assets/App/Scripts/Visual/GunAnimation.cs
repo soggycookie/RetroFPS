@@ -84,6 +84,11 @@ public class GunAnimation : MonoBehaviour
         //m_animationData.Initialize(m_visualTransform, m_defaultPos, m_defaultRot, m_swapTransform, duration, isFullRotation ? lap : 0,  fullRotationAxis);
     }
 
+    private void Start()
+    {
+        MoveToSwapPos();
+    }
+
     public void Shoot(){
         if(shakeTween != null)
             shakeTween.Kill();

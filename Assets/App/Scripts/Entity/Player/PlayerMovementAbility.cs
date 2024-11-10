@@ -1,4 +1,5 @@
 
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,16 +17,6 @@ public class PlayerMovementAbility : MonoBehaviour
         DASHING,
     };
 
-    struct PlayerInput
-    {
-        public bool    isSpaceHeld;
-        public bool    isSpacePressed;
-        public bool    isShiftPressed;
-        public bool    isCtrlPressed;
-        public bool    isCtrlReleased;
-        public bool    isCtrlHeld;
-        public Vector2 moveDirection;
-    };
 
 
     [SerializeField]
@@ -62,10 +53,8 @@ public class PlayerMovementAbility : MonoBehaviour
 
     private PlayerCameraController   m_fpsCamera;
     private Rigidbody                m_rigidbody;
-    private PlayerInputHandler       m_inputHandler;
     private MovementState            m_movementState;
-    private PlayerInput              m_currentInput;
-
+    private PlayerInputHandler.KeyboardInput m_input; 
 
 
 
@@ -132,7 +121,6 @@ public class PlayerMovementAbility : MonoBehaviour
 
 
         m_fpsCamera    = Camera.main.GetComponent<PlayerCameraController>();
-        m_inputHandler = GetComponent<PlayerInputHandler>();
 
         m_rigidbody    = GetComponent<Rigidbody>();
         m_rigidbody.freezeRotation = true;
@@ -168,7 +156,6 @@ public class PlayerMovementAbility : MonoBehaviour
         CheckFreeFall();
         SetMaxMultiplierWhileFall();
 
-        HandleInput();
         GetDesiredMoveAndDashDir();
 
         ManageState();
@@ -192,15 +179,9 @@ public class PlayerMovementAbility : MonoBehaviour
 
     }
 
-    void HandleInput()
+    public void HandleInput(PlayerInputHandler.KeyboardInput keyboardInput)
     {
-        m_currentInput.isSpaceHeld    = m_inputHandler.GetSpaceHeld();
-        m_currentInput.isSpacePressed = m_inputHandler.GetSpacePressed();
-        m_currentInput.isShiftPressed = m_inputHandler.GetShiftPressed();
-        m_currentInput.isCtrlPressed  = m_inputHandler.GetCtrlPressed();
-        m_currentInput.isCtrlReleased = m_inputHandler.GetCtrlReleased();
-        m_currentInput.isCtrlHeld     = m_inputHandler.GetCtrlHeld();
-        m_currentInput.moveDirection  = m_inputHandler.GetMoveDirection();
+        m_input = keyboardInput;
     }
 
     void ManageState()
@@ -300,7 +281,7 @@ public class PlayerMovementAbility : MonoBehaviour
         if (Time.time - m_timeSinceLastJump > m_groundCheckAfterJumpTime){
             for (int i = 0; i < groundCheckTrs.Length; i++)
             {
-                bool rayCheck = Physics.Raycast(groundCheckTrs[i].position + Vector3.up, Vector3.down, 0.1f + Vector3.up.magnitude, m_playerMovementSO.ground);
+                bool rayCheck = Physics.Raycast(groundCheckTrs[i].position + Vector3.up, Vector3.down, 0.1f + Vector3.up.magnitude, m_playerMovementSO.groundMask | m_playerMovementSO.wallMask);
 
                 if (rayCheck)
                 {
@@ -322,7 +303,7 @@ public class PlayerMovementAbility : MonoBehaviour
 
     void GetDesiredMoveAndDashDir()
     {
-        m_desiredMoveDir = transform.right * m_currentInput.moveDirection.x + transform.forward * m_currentInput.moveDirection.y;
+        m_desiredMoveDir = transform.right * m_input.MoveDirection.x + transform.forward * m_input.MoveDirection.y;
         m_desiredMoveDir = m_desiredMoveDir.normalized;
 
         if (m_movementState != MovementState.DASHING)
@@ -481,7 +462,7 @@ public class PlayerMovementAbility : MonoBehaviour
 
     bool CheckOnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out m_slopeHit, 0.3f, m_playerMovementSO.ground))
+        if (Physics.Raycast(transform.position, Vector3.down, out m_slopeHit, 0.3f, m_playerMovementSO.groundMask))
         {
             float slopeAngle = Vector3.Angle(Vector3.up, m_slopeHit.normal);
 
@@ -493,7 +474,7 @@ public class PlayerMovementAbility : MonoBehaviour
     void ModifyMoveDirOnSlope()
     {
         Vector3 slopeForward = GetSlopeForward();
-        m_desiredMoveDir = (transform.right * m_currentInput.moveDirection.x + slopeForward * m_currentInput.moveDirection.y).normalized;
+        m_desiredMoveDir = (transform.right * m_input.MoveDirection.x + slopeForward * m_input.MoveDirection.y).normalized;
     }
 
     Vector3 GetSlopeForward()
@@ -507,7 +488,7 @@ public class PlayerMovementAbility : MonoBehaviour
     #region Jump
     void HandleGroundJumpCondition()
     {
-        if (m_isGrounded && m_readyToJump && m_inputHandler.GetSpacePressed())
+        if (m_isGrounded && m_readyToJump && m_input.SpacePressed)
         {
             m_movementState   = MovementState.AIRING;
             m_isJumpTriggered = true;
@@ -539,7 +520,7 @@ public class PlayerMovementAbility : MonoBehaviour
         }
 
         m_rigidbody.AddForce(jumpDir * force, ForceMode.Impulse);
-        StartCoroutine(ResetJumpCoolDown());
+        ResetJumpCoolDown();
 
     }
 
@@ -557,7 +538,7 @@ public class PlayerMovementAbility : MonoBehaviour
             return;
 
 
-        if (!m_inputHandler.GetSpacePressed())
+        if (!m_input.SpacePressed)
         {
             return;
         }
@@ -578,10 +559,12 @@ public class PlayerMovementAbility : MonoBehaviour
         m_isWallJumpTriggered = false;
     }
 
-    IEnumerator ResetJumpCoolDown()
+    private void ResetJumpCoolDown()
     {
-        yield return new WaitForSeconds(m_playerMovementSO.jumpCoolDown);
-        m_readyToJump = true;
+        DOVirtual.Float(0, 1, m_playerMovementSO.jumpCoolDown, (v) => { }).OnComplete( () =>{
+            m_readyToJump = true;
+
+        });
     }
 
 
@@ -594,7 +577,7 @@ public class PlayerMovementAbility : MonoBehaviour
         if(m_isGrounded)
             return;
 
-        if (!m_inputHandler.GetCtrlPressed())
+        if (!m_input.CtrlPressed)
         {
             return;
         }
@@ -742,13 +725,13 @@ public class PlayerMovementAbility : MonoBehaviour
         if (m_wasJump)
             return;
 
-        if (m_inputHandler.GetCtrlPressed())
+        if (m_input.CtrlPressed)
         {
             GetSlideDir();
             m_canSlide = true;
         }
 
-        if (!m_inputHandler.GetCtrlHeld())
+        if (!m_input.CtrlHeld)
             return;
 
         if (!m_canSlide)
@@ -762,7 +745,7 @@ public class PlayerMovementAbility : MonoBehaviour
 
     void HandleSlideExitCondition()
     {
-        if (m_inputHandler.GetCtrlReleased() || m_isJumpTriggered)
+        if (m_input.CtrlReleased || m_isJumpTriggered)
         {
             if(m_isJumpTriggered)
                 m_movementState = MovementState.AIRING;
@@ -785,7 +768,7 @@ public class PlayerMovementAbility : MonoBehaviour
 
     #region Dash
     void HandleDashCondition(){
-        if (!m_inputHandler.GetShiftPressed())
+        if (!m_input.ShiftPressed)
             return;
 
         if(CurrentDashEnergy < (m_playerMovementSO.totalDashEnergy / (float) m_playerMovementSO.maxDashCharge))
@@ -921,7 +904,8 @@ public class PlayerMovementAbility : MonoBehaviour
 
         switch (m_movementState){
             case MovementState.SLAMMING:
-                if (collision.gameObject.layer == 3 || collision.gameObject.layer == 6)
+                if ( (1 << collision.gameObject.layer | m_playerMovementSO.groundMask | m_playerMovementSO.wallMask) 
+                    == (m_playerMovementSO.groundMask | m_playerMovementSO.wallMask))
                     HandleSlamCollisonEnter();
 
 
@@ -929,7 +913,8 @@ public class PlayerMovementAbility : MonoBehaviour
                 break;
 
             case MovementState.DASHING:
-                if (collision.gameObject.layer == 3 || collision.gameObject.layer == 6) 
+                if ( (1 << collision.gameObject.layer | m_playerMovementSO.groundMask | m_playerMovementSO.wallMask) 
+                    == (m_playerMovementSO.groundMask | m_playerMovementSO.wallMask))
                     CancelDash();
                 
                 break;
@@ -937,7 +922,7 @@ public class PlayerMovementAbility : MonoBehaviour
                 break;
         }
 
-        if (collision.gameObject.layer == 6)
+        if ( (1 << collision.gameObject.layer | m_playerMovementSO.wallMask) == m_playerMovementSO.wallMask)
         {
             GetWallNormalAndCheckWallJump(collision);
         }
@@ -959,7 +944,8 @@ public class PlayerMovementAbility : MonoBehaviour
 
         //To handle case which player press slamming button at the exact moment collision enter under air state -> stuck in slam state
         if(m_movementState == MovementState.SLAMMING){
-            if (collision.gameObject.layer == 3 || collision.gameObject.layer == 6)
+            if ((1 << collision.gameObject.layer | m_playerMovementSO.groundMask | m_playerMovementSO.wallMask) 
+                == (m_playerMovementSO.groundMask | m_playerMovementSO.wallMask))
             {
                 HandleSlamCollisonEnter();
             }
@@ -971,13 +957,14 @@ public class PlayerMovementAbility : MonoBehaviour
     {
         m_collidedLayers.Remove(collision.gameObject.layer);
 
-        if (collision.gameObject.layer == 3 || collision.gameObject.layer == 6)
+        if ((1 << collision.gameObject.layer | m_playerMovementSO.groundMask | m_playerMovementSO.wallMask) 
+            == (m_playerMovementSO.groundMask | m_playerMovementSO.wallMask))
         {
             m_isCollidedWithGroundAndWall = false;
         }
 
 
-        if (collision.gameObject.layer == 6)
+        if ( (1 << collision.gameObject.layer | m_playerMovementSO.wallMask) == m_playerMovementSO.wallMask)
         {
             m_isWallSlide    = false;
             m_canWallJump    = false;

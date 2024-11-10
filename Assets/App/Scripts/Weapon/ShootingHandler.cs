@@ -20,13 +20,16 @@ public abstract class ShootingHandler
     public    UnityAction         OnShooting;
     public    UnityAction         OnCharging;
 
-    public abstract bool HandleInput(GunInput input);
+    public abstract bool HandleInput(PlayerInputHandler.MouseInput input);
 
     protected bool CheckShoot()
     {
         return BulletManager.CheckCanShoot();
     }
 
+    public void ResetChargeTime(){
+        CurrentChargeTime = 0f;
+    }
 }
 
 public class StandardShootingHandler : ShootingHandler
@@ -48,7 +51,7 @@ public class StandardShootingHandler : ShootingHandler
         }
     }
 
-    public override bool HandleInput(GunInput input)
+    public override bool HandleInput(PlayerInputHandler.MouseInput input)
     {
         bool triggered = CheckShoot();
 
@@ -58,8 +61,13 @@ public class StandardShootingHandler : ShootingHandler
         switch (m_shotTriggerMode)
         {
             case TriggerMode.MANUAL:
-                if (input.lmbPressed)
+                if(input.RmbHeld){
+                    return false;
+                }
+
+                if (input.LmbPressed)
                 {
+                    CurrentChargeTime = 0f;
                     BulletManager.Shoot();
 
                     OnShooting?.Invoke();
@@ -68,7 +76,13 @@ public class StandardShootingHandler : ShootingHandler
                 }
                 break;
             case TriggerMode.AUTOMATIC:
-                if (input.lmbHeld || input.lmbPressed) {
+                if (input.RmbHeld)
+                {
+                    return false;
+                }
+
+                if (input.LmbHeld || input.LmbPressed) {
+                    CurrentChargeTime = 0f;
 
                     BulletManager.Shoot();
 
@@ -78,7 +92,7 @@ public class StandardShootingHandler : ShootingHandler
                 }
                 break;
             case TriggerMode.CHARGING:
-                if (input.lmbHeld)
+                if (input.LmbHeld)
                 {
                     CurrentChargeTime += Time.deltaTime;
 
@@ -92,7 +106,7 @@ public class StandardShootingHandler : ShootingHandler
                     }
                 }
 
-                if (input.lmbReleased)
+                if (input.LmbReleased)
                 {
                     CurrentChargeTime = 0;
 
@@ -130,7 +144,7 @@ public class SpecialShootingHandler : ShootingHandler
         }
     }
 
-    public override bool HandleInput(GunInput input)
+    public override bool HandleInput(PlayerInputHandler.MouseInput input)
     {
         bool triggered = CheckShoot();
 
@@ -140,8 +154,10 @@ public class SpecialShootingHandler : ShootingHandler
         switch (m_shotTriggerMode)
         {
             case TriggerMode.MANUAL:
-                if (input.rmbPressed)
+
+                if (input.RmbPressed)
                 {
+                    CurrentChargeTime = 0;
                     OnShooting?.Invoke();
                     BulletManager.Shoot();
                     return true;
@@ -149,14 +165,19 @@ public class SpecialShootingHandler : ShootingHandler
 
                 break;
             case TriggerMode.AUTOMATIC:
-                if ( (input.rmbHeld || input.rmbPressed) && !input.lmbHeld){
+                if ( (input.RmbHeld || input.RmbPressed) && !input.LmbHeld){
+
+                    CurrentChargeTime = 0;
+                    
                     OnShooting?.Invoke();
                     BulletManager.Shoot();
                     return true; 
                 }
                 break;
             case TriggerMode.CHARGING:
-                if(input.rmbHeld && !input.lmbHeld){
+                
+
+                if(input.RmbHeld){
                     CurrentChargeTime += Time.deltaTime;
 
                     if(CurrentChargeTime >= TotalChargeTime){
@@ -170,7 +191,8 @@ public class SpecialShootingHandler : ShootingHandler
                     }
                 }
 
-                if(input.rmbReleased && !input.lmbHeld){
+                if( input.RmbReleased)
+                {
                     CurrentChargeTime = 0;
 
                     BulletManager.Shoot();

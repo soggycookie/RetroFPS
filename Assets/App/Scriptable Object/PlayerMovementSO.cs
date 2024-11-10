@@ -17,7 +17,8 @@ public class PlayerMovementSO : ScriptableObject
 
 
     [Space(10)]
-    public LayerMask ground;
+    public LayerMask groundMask;
+    public LayerMask wallMask;
     public LayerMask enemy;
 
 
