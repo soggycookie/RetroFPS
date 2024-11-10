@@ -26,6 +26,13 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private GunVariantSO       m_variantData;
 
+
+    [SerializeField]
+    private BulletManager      m_standardBulletManager;
+
+    [SerializeField]
+    private BulletManager      m_specialBulletManager;
+
     private float        m_switchDelayTime;
     private float        m_currentExitTime;
     private bool         m_canTrigger;
@@ -35,33 +42,44 @@ public class Gun : MonoBehaviour
 
     private StandardShootingHandler m_standardShotHandler;
     private SpecialShootingHandler  m_specialShotHandler;
-
+  
 
     private void Awake()
     {
-        m_chargingUI = GetComponentInChildren<ChargingUI>();
+        m_chargingUI    = GetComponentInChildren<ChargingUI>();
         m_gunAnimation  = GetComponentInChildren<GunAnimation>();
+        
         PlayerCameraController cam = m_cameraTransform.GetComponent<PlayerCameraController>();
 
         if (m_playerInputHandler == null)
             m_playerInputHandler = FindAnyObjectByType<PlayerInputHandler>();
 
-        m_standardShotHandler = new StandardShootingHandler(this, m_variantData.standardBulletPrefab,m_cameraTransform, m_muzzlePoint, m_variantData.standardTriggerMode,
-            true, m_variantData.standardDefaultCapacity, m_variantData.standardMaxCapacity,
-            m_variantData.standardTotalChargingTime, m_variantData.standardDamageMultiplier);
+        InitializeShootingHandler();
 
-        m_specialShotHandler  = new SpecialShootingHandler(this, m_variantData.specialBulletPrefab, m_cameraTransform, m_muzzlePoint, m_variantData.specialTriggetMode,
-            true, m_variantData.specialDefaultCapacity, m_variantData.specialMaxCapacity ,
-            m_variantData.specialTotalChargingTime, m_variantData.specialDamageMultiplier);
+        m_canTrigger = true;
+    
+        m_gunAnimation.OnFinshSwap += () => { IsGunDisable = false; };    
+        
+    }
+    
+    private void InitializeShootingHandler(){
+
+        m_standardShotHandler = new StandardShootingHandler(m_standardBulletManager ,m_variantData.standardTriggerMode, m_variantData.standardTotalChargingTime ,m_variantData.standardDamageMultiplier);
+
+        m_specialShotHandler  = new SpecialShootingHandler( m_specialBulletManager , m_variantData.specialTriggetMode, m_variantData.specialTotalChargingTime, m_variantData.specialDamageMultiplier);
 
         m_standardShotHandler.OnShooting += m_gunAnimation.Shoot;
         m_specialShotHandler. OnShooting += m_gunAnimation.Shoot;
 
         m_standardShotHandler.OnCharging += m_gunAnimation.Charge;
         m_specialShotHandler. OnCharging += m_gunAnimation.Charge;
-        m_canTrigger = true;
 
         m_chargingUI.ShootingHandler = m_specialShotHandler;
+    }
+
+    private void Start()
+    {
+        m_gunAnimation.MoveToSwapPos();
     }
 
     private void Update()
@@ -70,12 +88,11 @@ public class Gun : MonoBehaviour
 
         HandleGunInput();
         HandleBehaviorExecution();
-
-        ResetShooting();
+        ResetShootingCoolDown();
 
     }
 
-    void HandleGunInput()
+    private void HandleGunInput()
     {
         m_gunInput.lmbPressed  = m_playerInputHandler.GetLMBPressed();
         m_gunInput.lmbHeld     = m_playerInputHandler.GetLMBHeld();
@@ -85,7 +102,7 @@ public class Gun : MonoBehaviour
         m_gunInput.rmbReleased = m_playerInputHandler.GetRMBReleased();
     }
 
-    void HandleBehaviorExecution(){
+    private void HandleBehaviorExecution(){
         if(!m_canTrigger) return;
 
 
@@ -100,7 +117,7 @@ public class Gun : MonoBehaviour
     }
 
 
-    void ResetShooting(){
+    private void ResetShootingCoolDown(){
         if(m_canTrigger){
             return;
         }
@@ -112,13 +129,13 @@ public class Gun : MonoBehaviour
         }
     }
 
-    void DisableShooting(){
+    private void DisableShooting(){
         m_currentExitTime = 0;
         m_canTrigger      = false;
 
     }
 
-    public void DisableVisual(){
+    public void DisableGunVisual(){
         IsGunDisable = true;
         m_visualObject.SetActive(false);
         
@@ -126,11 +143,12 @@ public class Gun : MonoBehaviour
         m_gunAnimation.MoveToSwapPos();
     }
 
-    public void EnableVisual()
+    public void EnableGunVisual()
     {
         IsGunDisable = false;
         m_visualObject.SetActive(true);
-
+        
+        IsGunDisable = true;
         Swap();
     }
 

@@ -141,7 +141,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 2
   acesPreset:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 3
   hueShiftAmount:
     m_OverrideState: 0
@@ -150,8 +150,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   paperWhite:
-    m_OverrideState: 0
-    m_Value: 300
+    m_OverrideState: 1
+    m_Value: 10
   detectBrightnessLimits:
     m_OverrideState: 0
     m_Value: 1

@@ -11,26 +11,24 @@ public class Explosion : MonoBehaviour
     [SerializeField]
     private ExplosionVisual m_explosionVisual;
 
-    [SerializeField]
-    private float m_radius;
 
     private void Awake()
     {
         m_explosionVisual = GetComponent<ExplosionVisual>();
     }
 
-    public void Explode(Vector3 position, LayerMask mask)
+    public void Explode(Vector3 position, float radius, float damage, LayerMask mask)
     {
         transform.position = position;
 
 
-        Collider[] colliderHit = GetEntityInRadius(position, m_radius, mask);
+        Collider[] colliderHit = GetEntityInRadius(position, radius, mask);
 
         foreach (Collider collider in colliderHit)
         {
             if (collider.gameObject.TryGetComponent<IDamagable>(out IDamagable damagable))
             {
-                damagable.ApplyDamage(0f);
+                damagable.ApplyDamage(damage);
 
 
                 if (collider.gameObject.TryGetComponent<Rigidbody>(out Rigidbody rb))
@@ -47,7 +45,7 @@ public class Explosion : MonoBehaviour
 
         }
 
-        m_explosionVisual.Explode(m_radius, position);
+        m_explosionVisual.Explode(radius, position);
 
     }
 

@@ -39,6 +39,7 @@ public class GunAnimation : MonoBehaviour
     [Header("Shoot Animation")]
     public Vector3 recoilPosOffset;
     public Ease recoilPosEase;
+    public float   recoilPosDurationOffset;
 
     public Vector3 recoilDegOffset;
     public Ease recoilDegEase;
@@ -66,6 +67,7 @@ public class GunAnimation : MonoBehaviour
     public float TotalDuration { get; set;}
 
     public UnityAction<Vector3, float, float, float> OnShooting;
+    public UnityAction OnFinshSwap;
 
     private Vector3 m_defaultPos;
     private Vector3 m_defaultRot;
@@ -127,16 +129,16 @@ public class GunAnimation : MonoBehaviour
         Sequence seq = DOTween.Sequence();
 
 
+        seq.Append(m_visualTransform.DOLocalRotate(m_defaultRot + recoilDegOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
 
         seq.SetRelative(true);
 
-        seq.Append(m_visualTransform.DOBlendableLocalMoveBy(recoilPosOffset, pullRecoilDuration));
+        seq.Insert(recoilPosDurationOffset, m_visualTransform.DOBlendableLocalMoveBy(recoilPosOffset, pullRecoilDuration));
 
         seq.SetRelative(false);
 
 
 
-        seq.Join(m_visualTransform.DOLocalRotate(m_defaultRot + recoilDegOffset, pullRecoilDuration).SetEase(Ease.OutExpo));
 
         seq.AppendInterval(durationBeforeGoToOrigin);
 
@@ -154,7 +156,7 @@ public class GunAnimation : MonoBehaviour
 
         seq.Append(m_visualTransform.DOLocalMove(m_defaultPos, swapDuration));
         seq.Join(m_visualTransform.DOLocalRotate(m_defaultRot + m_fullRotationAxis.normalized * (-360 * m_lap), swapDuration, rotateMode));
-
+        seq.OnComplete( () => { OnFinshSwap?.Invoke();});
         return seq;
     }
 

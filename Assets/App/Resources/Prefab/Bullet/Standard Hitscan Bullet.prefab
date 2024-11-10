@@ -80,7 +80,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 10}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -163,8 +163,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fadeOutGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 0.030630242, b: 0, a: 1}
-    key1: {r: 1, g: 0, b: 0, a: 1}
+    key0: {r: 1, g: 0.96918243, b: 0, a: 1}
+    key1: {r: 0.88279486, g: 1, b: 0, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}

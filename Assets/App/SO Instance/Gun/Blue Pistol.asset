@@ -23,8 +23,8 @@ MonoBehaviour:
   specialTriggetMode: 2
   specialBulletPrefab: {fileID: 8847723782683125360, guid: 2fd83cbfc3a4a374a95db9ae6db96e48,
     type: 3}
-  specialDefaultCapacity: 3
-  specialMaxCapacity: 5
+  specialDefaultCapacity: 6
+  specialMaxCapacity: 9
   specialSwitchDelay: 0.3
   specialDamageMultiplier: 1
   specialTotalChargingTime: 0.5

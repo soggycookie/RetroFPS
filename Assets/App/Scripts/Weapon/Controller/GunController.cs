@@ -15,19 +15,19 @@ public class GunController : MonoBehaviour
     private void Awake()
     {
         m_playerInputHandler = FindAnyObjectByType<PlayerInputHandler>();
-
         for (int i = 0; i < m_guns.Length; i++)
         {
             if (i == 0)
             {
-                m_guns[i].EnableVisual();
+                m_guns[i].EnableGunVisual();
             }
             else
             {
-                m_guns[i].DisableVisual();
+                m_guns[i].DisableGunVisual();
             }
         }
     }
+
 
     private void Update()
     {
@@ -37,7 +37,7 @@ public class GunController : MonoBehaviour
     void SwapGuns(){
         if (m_playerInputHandler.GetQPress())
         {
-            m_guns[m_currentIndex].DisableVisual();
+            m_guns[m_currentIndex].DisableGunVisual();
             m_currentIndex++;
 
             if (m_currentIndex >= m_guns.Length)
@@ -45,7 +45,7 @@ public class GunController : MonoBehaviour
                 m_currentIndex = 0;
             }
 
-            m_guns[m_currentIndex].EnableVisual();
+            m_guns[m_currentIndex].EnableGunVisual();
         }
     }
 

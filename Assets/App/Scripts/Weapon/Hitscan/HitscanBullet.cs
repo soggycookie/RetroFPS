@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +8,26 @@ using UnityEngine.Events;
 [RequireComponent(typeof(HitscanBulletVisual))]
 public class HitscanBullet : Bullet
 {
-    
-    public UnityAction<Vector3[]>    OnShoot;
 
+    public UnityAction<Vector3[]>           OnShoot;
+
+    public UnityAction<Vector3, Vector3>    OnBlocked;
+    
     [SerializeField]
     private HitscanBulletVisual m_hitscanBulletVisual;
 
+    private HitScanBulletSO m_hitscanData;
+
     private void Awake()
     {
-        Initialze();
+
+        base.Initialize();
+        Initialize();
+
     }
 
-    protected virtual void Initialze() {
+
+    protected override void Initialize() {
         m_hitscanBulletVisual = GetComponent<HitscanBulletVisual>();
 
         if (m_bulletData is not HitScanBulletSO)
@@ -27,156 +36,179 @@ public class HitscanBullet : Bullet
         }
 
         m_hitscanBulletVisual.OnFinishFadeOut += () => {
-            Manager.f_bullet.Pool.Release(this);
+            Manager.GetBulletFactory().Pool.Release(this);
         };
+
+        m_hitscanData = m_bulletData as HitScanBulletSO;
     }
-
-    protected static (RaycastHit[], bool, RaycastHit) GetPiercingHitData(HitScanBulletSO hitscanData, Vector3 position, Vector3 direction)
-    {
-        RaycastHit[] hits;
-
-        RaycastHit visualHit = new RaycastHit();
-        bool isVisualRayHit = false;
-
-        if(hitscanData.hitHasRadius){
-
-            hits = Physics.SphereCastAll(position, hitscanData.hitRadius, direction, hitscanData.maxDistance, hitscanData.blockLayer | hitscanData.damagableLayer, QueryTriggerInteraction.Collide)
-                .OrderBy(hit => hit.distance).ToArray();
-
-            isVisualRayHit = Physics.Raycast(position, direction, out visualHit, hitscanData.maxDistance, hitscanData.blockLayer | hitscanData.damagableLayer, QueryTriggerInteraction.Collide);
-        }
-        else
-        {
-            hits = Physics.RaycastAll(position, direction, hitscanData.maxDistance, hitscanData.blockLayer | hitscanData.damagableLayer, QueryTriggerInteraction.Collide)
-                .OrderBy(hit => hit.distance).ToArray();
-
-            isVisualRayHit = hits.Length != 0;
-        }
-
-
-        return (hits, isVisualRayHit, visualHit);
-    }
-
-
-    protected static bool GetSingleHitData(HitScanBulletSO hitscanData, Vector3 position, Vector3 direction, out RaycastHit hit)
-    {
-        bool isHit = false;
-
-        hit = new RaycastHit();
-
-
-        isHit = Physics.Raycast(position, direction, out hit, hitscanData.maxDistance, hitscanData.blockLayer | hitscanData.damagableLayer, QueryTriggerInteraction.Collide);
-
-
-        return isHit;
-    }
-
 
     public override void Shoot()
     {
-        HitScanBulletSO hitscanData = m_bulletData as HitScanBulletSO;
-        Vector3[] linePos;
-
-        if(hitscanData.isPiercing){
-            linePos = PiercingShoot(hitscanData);
-        }else{
-            linePos = StandardShoot(hitscanData);
-        }
-
-        OnShoot?.Invoke(linePos);
-    }
-
-    private Vector3[] PiercingShoot(HitScanBulletSO data)
-    {
-        var hitsAndVisualRay = GetPiercingHitData(data, Manager.FPSCamera.position, Manager.FPSCamera.forward);
-
-        Vector3[] linePos;
+        Transform cam = Manager.GetCameraTransform();
+        RicochetData data;
 
 
-        RaycastHit[] hits = hitsAndVisualRay.Item1;
-        Vector3 blockedPoint = Vector3.zero;
-        bool isBlocked = false;
-
-
-        bool isVisualRayHit = hitsAndVisualRay.Item2;
-        RaycastHit visualRay = hitsAndVisualRay.Item3;
-
-
-        if (hits.Length == 0)
-        {
-            linePos = new Vector3[] { Manager.MuzzlePoint.position, Manager.FPSCamera.position + Manager.FPSCamera.forward * data.maxDistance };
-
-
-            return linePos;
-        }
-
-        foreach (RaycastHit hit in hits)
-        {
-            var bitmaskLayer = 1 << hit.transform.gameObject.layer;
-
-            if ((bitmaskLayer | data.blockLayer.value) == data.blockLayer.value)
-            {
-
-                blockedPoint = hit.point;
-                isBlocked = true;
-
-                break;
-            }
-
-        }
-
-        if (isBlocked)
-        {
-
-            if (isVisualRayHit)
-            {
-                linePos = new Vector3[] { Manager.MuzzlePoint.position, visualRay.point, blockedPoint };
-            }
-            else
-            {
-                linePos = new Vector3[] { Manager.MuzzlePoint.position, blockedPoint };
-            }
-        }
-        else
-        {
-            if (isVisualRayHit)
-            {
-                linePos = new Vector3[] { Manager.MuzzlePoint.position, visualRay.point, Manager.FPSCamera.position + Manager.FPSCamera.forward * data.maxDistance };
-            }
-            else
-            {
-                linePos = new Vector3[] { Manager.MuzzlePoint.position, Manager.FPSCamera.position + Manager.FPSCamera.forward * data.maxDistance };
-
-            }
-        }
-
-        return linePos;
-    }
-
-    private Vector3[] StandardShoot(HitScanBulletSO data)
-    {
+        data = ManageShooting(cam.position, cam.forward);
         
-        RaycastHit hit;
-        bool isHit;
-
-        Vector3[] linePos;
-
-        isHit = GetSingleHitData(data, Manager.FPSCamera.position, Manager.FPSCamera.forward, out hit);
-
-        if (!isHit)
+        if(m_hitscanData.isRicochet)
         {
-            linePos = new Vector3[] { Manager.MuzzlePoint.position, Manager.FPSCamera.position + Manager.FPSCamera.forward * data.maxDistance };
+            RicochetHandler handler = new RicochetHandler(this, data);
+            handler.Fire();
+        }
+    }
+
+    private void GetHitData(Vector3 pos, Vector3 dir, out HitData data){
+        
+        RaycastHit[] hits;
+        RaycastHit blockedHit;
+        bool isBlocked;
+
+        
+        if(m_hitscanData.isPiercing){
+            isBlocked = Physics.Raycast(pos, dir, out blockedHit, m_hitscanData.maxDistance, m_bulletData.blockLayer);
+            
+            Ray ray = new Ray(pos, dir);
+            if(isBlocked)
+            {
+
+                hits = Physics.SphereCastAll(ray, m_hitscanData.hitRadius, (pos - blockedHit.point).magnitude, m_bulletData.damagableLayer, QueryTriggerInteraction.Collide);
+
+            }else
+            {
+                hits = Physics.SphereCastAll(ray, m_hitscanData.hitRadius, m_hitscanData.maxDistance, m_bulletData.damagableLayer, QueryTriggerInteraction.Collide);
+            }
 
         }
         else
         {
-            linePos = new Vector3[] { Manager.MuzzlePoint.position, hit.point };
+            isBlocked = Physics.Raycast(pos, dir, out blockedHit, m_hitscanData.maxDistance, m_bulletData.blockLayer | m_bulletData.damagableLayer);
 
-            //Explosion explosion = GlobalExplosionFactory.Instance.Pool.Get();
+            if(  (1 << blockedHit.transform.gameObject.layer | m_bulletData.damagableLayer) == m_bulletData.damagableLayer){
+                hits = new RaycastHit[] { blockedHit};
+            }else{
+                hits = new RaycastHit[0];
+            }
+        }
+        
+        data = new HitData(isBlocked, blockedHit, hits);
+    }
 
-            //explosion.Explode(hit.point, m_bulletData.damagableLayer);
+     RicochetData ManageShooting(Vector3 pos, Vector3 dir, bool firstRay = true){
+        HitData hitData;
+        RicochetData ricochetData = new RicochetData(Vector3.zero, Vector3.zero);
+        Vector3[] linePos;
+
+        GetHitData(pos, dir, out hitData);
+
+        //damage
+        InflictDamage(hitData.damageHits);
+
+        //visual
+        if (firstRay)
+        {
+            Vector3 muzzlePoint = Manager.GetMuzzlePoint();
+            if (hitData.isBlocked)
+            {
+                linePos = ProcessVisualLinePos(muzzlePoint, hitData.blockedHit.point);
+            }
+            else
+            {
+                linePos = ProcessVisualLinePos(muzzlePoint, dir, m_hitscanData.maxDistance);
+            }
+        }
+        else
+        {
+            if (hitData.isBlocked)
+            {
+                linePos = ProcessVisualLinePos(pos, hitData.blockedHit.point);
+            }
+            else
+            {
+                linePos = ProcessVisualLinePos(pos, dir, m_hitscanData.maxDistance);
+            }
+        }
+        
+        OnShoot?.Invoke(linePos);
+
+        if(hitData.isBlocked){
+            //particle
+            Manager.GetParticleFactory().Pool.Get().PlayVFX(hitData.blockedHit.point, hitData.blockedHit.normal);
+
+            //ricochet
+            ricochetData.reflectPos = hitData.blockedHit.point;
+            ricochetData.reflectDir = Vector3.Reflect(dir, hitData.blockedHit.normal);
         }
 
+        return ricochetData;
+    }
+
+    private Vector3[] ProcessVisualLinePos(Vector3 originalPos, Vector3 blockPoint){
+        Vector3[] linePos;
+        
+        linePos = new Vector3[] { originalPos, blockPoint };
+
         return linePos;
+    }
+
+    private Vector3[] ProcessVisualLinePos(Vector3 originalPos, Vector3 originalDir, float maxDist)
+    {
+        Vector3[] linePos;
+        
+        linePos = new Vector3[] { originalPos, originalPos + originalDir * maxDist };
+
+        return linePos;
+    }
+
+    struct RicochetData{
+        public Vector3 reflectPos; 
+        public Vector3 reflectDir;
+
+        public RicochetData(Vector3 pos, Vector3 dir){
+            reflectPos = pos;
+            reflectDir = dir;
+        }
+    }
+
+    struct HitData{
+        public bool         isBlocked;
+        public RaycastHit   blockedHit;
+        public RaycastHit[] damageHits;
+
+        public HitData(bool blocked, RaycastHit blockHit, RaycastHit[] damage){
+            isBlocked  = blocked;
+            blockedHit = blockHit;
+            damageHits = damage;
+        }
+    }
+
+    class RicochetHandler{
+        
+        private HitscanBullet m_bullet;
+        private RicochetData  m_data;
+
+        public RicochetHandler(HitscanBullet bullet, RicochetData initialData)
+        {
+            m_bullet = bullet;
+            m_data = initialData;
+        }
+
+        public void Fire(){
+
+
+            for (int i = 1; i < m_bullet.m_hitscanData.maxRicochetTime; i++)
+            {
+                HitscanBullet newBullet = m_bullet.Manager.GetBulletFactory().Pool.Get() as HitscanBullet;
+
+                if (m_data.reflectDir == Vector3.zero)
+                {
+                    break;
+                }
+
+                m_data = newBullet.ManageShooting(m_data.reflectPos, m_data.reflectDir, false);
+
+            }
+        }
     }
 }
+
+

@@ -41,9 +41,9 @@ public class HitScanBulletSO : BulletSO
             maxRicochetTime = 0;
         }
 
-        if(!isPiercing && hitHasRadius ){
+        if( (isPiercing || isRicochet) && !hitHasRadius ){
             Debug.LogWarning("to make hit has radius");
-            hitHasRadius = false;
+            hitHasRadius = true;
         }
 
     }

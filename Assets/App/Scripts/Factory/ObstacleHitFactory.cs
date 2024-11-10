@@ -3,30 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class BulletFactory : MonoBehaviour
+public class ObstacleHitFactory : MonoBehaviour
 {
-    public ObjectPool<Bullet> Pool { get; set; }
+    public ObjectPool<BulletHitVFX> Pool { get; private set; }
     
     [SerializeField]
     private int m_defaultCapacity;
 
     [SerializeField]
     private int m_maxCapacity;
-    
-    public void CreatePool(Bullet prefab, BulletManager manager)
+   
+
+    public void CreatePool(BulletHitVFX prefab)
     {
-        GameObject poolGO = new GameObject("Bullet pool");
+        GameObject poolGO = new GameObject("Paricle pool");
         poolGO.transform.position = Vector3.up * 100f;
 
-        Pool = new ObjectPool<Bullet>(() => {
+        Pool = new ObjectPool<BulletHitVFX>(() => {
 
             //Debug.Log("before");
-            Bullet bullet = Instantiate(prefab, poolGO.transform);
+            BulletHitVFX obj= Instantiate(prefab, poolGO.transform);
+            obj.Factory = this;
+
             //Debug.Log("after");
-            bullet.Manager = manager;
             //Debug.Log("pop");
 
-            return bullet;
+            return obj;
         }, obj => {
             obj.gameObject.SetActive(true);
         }, obj => {
@@ -36,4 +38,7 @@ public class BulletFactory : MonoBehaviour
         }, true, m_defaultCapacity, m_maxCapacity);
 
     }
+
+
+
 }

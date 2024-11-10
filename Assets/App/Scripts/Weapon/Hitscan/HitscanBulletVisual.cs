@@ -10,6 +10,7 @@ public class HitscanBulletVisual : MonoBehaviour
     public UnityAction OnFinishFadeOut;
 
 
+
     [SerializeField]
     private Gradient        m_fadeOutGradient;
 
@@ -33,7 +34,8 @@ public class HitscanBulletVisual : MonoBehaviour
         m_baseGradient  = m_lineRenderer.colorGradient;
         m_baseCurve     = m_lineRenderer.widthCurve;
 
-        m_bullet.OnShoot += SetLineRendererPositions;
+        m_bullet.OnShoot    += SetLineRendererPositions;
+        
     }
 
     private void Update()
@@ -97,11 +99,13 @@ public class HitscanBulletVisual : MonoBehaviour
     {
         m_lineRenderer.colorGradient = m_baseGradient;
         m_lineRenderer.widthCurve    = m_baseCurve;
+        m_lineRenderer.SetPositions(new Vector3[] { Vector3.zero, Vector3.zero});
     }
 
     public void SetLineRendererPositions(Vector3[] positions)
     {
         m_lineRenderer.SetPositions(positions);
     }
+    
 
 }

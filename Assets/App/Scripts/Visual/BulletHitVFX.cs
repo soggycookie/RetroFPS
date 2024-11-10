@@ -7,7 +7,7 @@ public class BulletHitVFX : MonoBehaviour
 {
     private ParticleSystem m_particleSystem;
 
-    public  BulletManager BulletBehavior   { get; set; }
+    public ObstacleHitFactory Factory { get; set;}
 
     private void Awake()
     {
@@ -15,11 +15,6 @@ public class BulletHitVFX : MonoBehaviour
     }
 
 
-    private void Start()
-    {
-        //instatiate (awake and enable run before the call)
-        //so the populated data can only be accessed after enable
-    }
 
     public void PlayVFX(Vector3 position, Vector3 normal)
     {
@@ -30,16 +25,11 @@ public class BulletHitVFX : MonoBehaviour
     }
 
 
-    private void OnDestroy()
-    {
-        //the behavior and this script get disable at the same time anyway
-        //so no chance of the event get called when the script was disable                                              
-    }
 
-    //private void OnParticleSystemStopped()
-    //{
-    //    BulletBehavior.f_ParticleSystem.Pool.Release(this);
-    //}
+    private void OnParticleSystemStopped()
+    {
+        Factory.Pool.Release(this);
+    }
 
 
 }

@@ -8,11 +8,7 @@ using UnityEngine.UI;
 
 public abstract class ShootingHandler
 {
-    protected Gun                 m_gunController;
     protected TriggerMode         m_shotTriggerMode;
-    protected Transform           m_muzzlePoint;
-    protected Transform           m_cameraTransform;
-    protected Bullet              m_bullet;
     protected float               m_damageMultiplier;
     protected bool                m_canChargeEventSend = true;
 
@@ -21,42 +17,10 @@ public abstract class ShootingHandler
     public    float               TotalChargeTime   { get; protected set;}
     public    float               CurrentChargeTime { get; protected set;} 
 
-    private BulletSO.ExecutionType m_bulletType;
-
-
     public    UnityAction         OnShooting;
     public    UnityAction         OnCharging;
 
     public abstract bool HandleInput(GunInput input);
-
-    protected BulletManager AddBulletBehaviorComponent(bool hasCollectionCheck , int defaultCapacity, int maxCapacity)
-    {
-        BulletManager manager = m_gunController.gameObject.AddComponent<BulletManager>();
-        manager.FPSCamera     = m_cameraTransform;
-        manager.MuzzlePoint   = m_muzzlePoint;
-        manager.BulletPrefab  = m_bullet;
-        manager.BulletData    = m_bullet.GetBulletData();
-        manager.InitializePoolParameters(hasCollectionCheck, defaultCapacity, maxCapacity);
-
-        return manager;
-    }
-
-    public void InitializeShotHandler(Gun controller, Bullet bullet, Transform camera, Transform muzzlePoint, TriggerMode mode,
-        bool hasCollectionCheck, int defaultCapacity , int maxCapacity, float totalChargeTime, float damageMultiplier)
-    {
-
-        m_gunController    = controller;
-        m_muzzlePoint      = muzzlePoint;
-        m_shotTriggerMode  = mode;
-        m_cameraTransform  = camera;
-
-        m_damageMultiplier = damageMultiplier;
-        TotalChargeTime    = totalChargeTime;
-
-        m_bullet           = bullet;
-
-        BulletManager = AddBulletBehaviorComponent( hasCollectionCheck, defaultCapacity, maxCapacity);
-    }
 
     protected bool CheckShoot()
     {
@@ -67,10 +31,12 @@ public abstract class ShootingHandler
 
 public class StandardShootingHandler : ShootingHandler
 {
-    public StandardShootingHandler(Gun controller, Bullet bullet, Transform camera, Transform muzzlePoint, TriggerMode mode,
-        bool hasCollectionCheck , int defaultCapacity , int maxCapacity, float totalChargeTime, float damageMultipler ){
-
-        InitializeShotHandler(controller, bullet, camera, muzzlePoint, mode, hasCollectionCheck, defaultCapacity, maxCapacity, totalChargeTime, damageMultipler);
+    public StandardShootingHandler(BulletManager manager, TriggerMode mode, float totalChargeTime, float damageMultipler){
+        
+        BulletManager      = manager;
+        m_shotTriggerMode  = mode;
+        TotalChargeTime    = totalChargeTime;
+        m_damageMultiplier = damageMultipler;
 
         if (m_shotTriggerMode == TriggerMode.CHARGING)
         {
@@ -149,11 +115,12 @@ public class StandardShootingHandler : ShootingHandler
 public class SpecialShootingHandler : ShootingHandler
 {
 
-    public SpecialShootingHandler(Gun controller, Bullet bullet, Transform camera, Transform muzzlePoint, TriggerMode mode,
-        bool hasCollectionCheck, int defaultCapacity, int maxCapacity, 
-         float totalChargeTime, float damageMultipler)
+    public SpecialShootingHandler(BulletManager manager, TriggerMode mode, float totalChargeTime, float damageMultipler)
     {
-        InitializeShotHandler(controller, bullet, camera, muzzlePoint, mode, hasCollectionCheck, defaultCapacity, maxCapacity, totalChargeTime, damageMultipler);
+        BulletManager      = manager;
+        m_shotTriggerMode  = mode;
+        TotalChargeTime    = totalChargeTime;
+        m_damageMultiplier = damageMultipler;
 
         if(m_shotTriggerMode == TriggerMode.CHARGING){
             if(TotalChargeTime <= 0f || m_damageMultiplier <= 0f){
@@ -161,8 +128,6 @@ public class SpecialShootingHandler : ShootingHandler
                 throw new ArgumentException("Must set totalChargeTime and damageMultipler when use 'CHARGE' mode ");
             }
         }
-
-
     }
 
     public override bool HandleInput(GunInput input)

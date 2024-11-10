@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50b0a385a33628a468aad96d96ea7799, type: 3}
   m_Name: Piercing Pistol Shot
   m_EditorClassIdentifier: 
-  wallHitParticle: {fileID: 3260422055625481456, guid: 537b23094f899064289f5acb98c438eb,
+  wallHitParticle: {fileID: 2529110355633480021, guid: df87a09c7798b214ca143be4b1c5e2bd,
     type: 3}
   usePooling: 1
   defaultCapactiy: 3
@@ -27,7 +27,7 @@ MonoBehaviour:
   damagePerShot: 10
   bulletsPerShot: 1
   explodeOnContact: 0
-  explosionRadius: 0
+  explosionRadius: 10
   maxDistance: 300
   isPiercing: 1
   isRicochet: 0

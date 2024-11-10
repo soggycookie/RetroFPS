@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
         m_currentHealth += m_healSpeed * Time.deltaTime;
     }
 
-    private void LoseHealth(float healthLoss){
+    public void LoseHealth(float healthLoss){
         m_currentHealth -= healthLoss;
 
         if(m_currentHealth <= 0){

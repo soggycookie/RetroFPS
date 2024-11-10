@@ -6,8 +6,11 @@ using UnityEngine;
 public class BulletManager : MonoBehaviour 
 {
 
-    public Transform FPSCamera         { get; set; }
-    public Transform MuzzlePoint       { get; set; }
+    [SerializeField]
+    private Transform m_playerCamera;
+     
+    [SerializeField]
+    private Transform m_muzzlePoint;
    
 
     public float     CurrentCoolDownTime { get; protected set; }
@@ -15,16 +18,14 @@ public class BulletManager : MonoBehaviour
 
     protected bool   m_canShoot;
 
-    protected int    m_defaultPoolingCapacity;
-    protected int    m_maxPoolingCapacity;
-    protected bool   m_hasCollectionCheck;
+    [SerializeField]
+    protected BulletFactory m_BulletPoolFactory;
 
-    public Bullet    BulletPrefab { get; set; }
-
-    //public ParticleSystemFactory f_ParticleSystem { get; private set; }
-    public BulletFactory f_bullet { get; private set; }
-
-    public BulletSO BulletData { get; set;}
+    [SerializeField]
+    private Bullet m_bullet;
+    
+    [SerializeField]
+    private ObstacleHitFactory m_particleFactory;
 
     private void Awake()
     {
@@ -33,8 +34,7 @@ public class BulletManager : MonoBehaviour
 
     private void Start()
     {
-        InstantiateBulletFactory();
-        BulletCoolDown = BulletData.bulletCoolDown;
+        BulletCoolDown = m_bullet.GetBulletData().bulletCoolDown;
     }
 
     private void Update()
@@ -60,9 +60,9 @@ public class BulletManager : MonoBehaviour
 
         if(!m_canShoot) return;
 
-        for (int i = 0; i < BulletData.bulletsPerShot; i++)
+        for (int i = 0; i < m_bullet.GetBulletData().bulletsPerShot; i++)
         {
-            Bullet bullet = f_bullet.Pool.Get();
+            Bullet bullet = m_BulletPoolFactory.Pool.Get();
             bullet.Shoot();
         }
 
@@ -83,20 +83,24 @@ public class BulletManager : MonoBehaviour
     private void Initialize()
     {
         m_canShoot = true;
+
+        m_BulletPoolFactory.CreatePool(m_bullet, this);
+        m_particleFactory.CreatePool(m_bullet.GetBulletData().wallHitParticle);
+    }
+    
+    public ObstacleHitFactory GetParticleFactory(){
+        return m_particleFactory;
     }
 
-    public void InitializePoolParameters(bool collisionCheck, int defaultCapacity, int maxCapacity)
-    {
-        m_defaultPoolingCapacity = defaultCapacity;
-        m_maxPoolingCapacity     = maxCapacity;
-        m_hasCollectionCheck     = collisionCheck;
+    public BulletFactory GetBulletFactory(){
+        return m_BulletPoolFactory;
     }
 
-
-    private void InstantiateBulletFactory(){
-        f_bullet = gameObject.AddComponent<BulletFactory>();
-
-        f_bullet.CreatePool(m_hasCollectionCheck, m_defaultPoolingCapacity, m_maxPoolingCapacity, BulletPrefab, this);
+    public Transform GetCameraTransform(){
+        return m_playerCamera;
     }
 
+    public Vector3 GetMuzzlePoint(){
+        return m_muzzlePoint.position;
+    }
 }
